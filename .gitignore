@@ -1,0 +1,91 @@
+# Ignore everything at root level
+/*
+
+# Allow only wp-content directory
+!wp-content/
+
+# Ignore files/folders inside wp-content
+wp-content/uploads/
+wp-content/uploads-webpc/
+wp-content/cache/
+wp-content/wphb-cache/
+wp-content/wp-rocket-config/
+wp-content/wflogs/
+wp-content/upgrade/
+wp-content/upgrade-temp-backup/
+wp-content/backup*/
+wp-content/backups/
+wp-content/ai1wm-backups/
+wp-content/logs/
+wp-content/ewww/
+wp-content/smush-webp/
+wp-content/webp-express/
+wp-content/webtoffee_export/
+wp-content/wphb-logs/
+wp-content/advanced-cache.php
+wp-content/object-cache.php
+wp-content/db.php
+
+# Allow important files
+!.gitignore
+!.augmentignore
+!docker-compose.yml
+!Dockerfile
+!.dockerignore
+!README-DOCKER.md
+
+# Database files
+*.sql
+*.sql.gz
+*.sqlite
+
+# Logs
+*.log
+error_log
+access_log
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.project
+.settings/
+.buildpath
+
+# Environment Files
+.env
+.env.local
+.env.*.local
+
+# Compressed Files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Temporary Files
+*.tmp
+*.bak
+*.old
+
+# Security
+*.pem
+*.key
+*.crt
+*.csr
+
