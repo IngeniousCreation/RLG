@@ -1,0 +1,160 @@
+// ------------------------------------------------------------------------------------------------
+// BUTTONS
+// ------------------------------------------------------------------------------------------------
+
+.xts-btn {
+	@extend %xts-button;
+	border-radius: $xts-option-border-radius;
+	border: none;
+	outline: none;
+	text-decoration: none;
+}
+
+.xts-btn-primary {
+	@extend %xts-button-primary;
+	@extend %xts-button-primary-hover;
+}
+
+.xts-remove-upload-btn {
+	background-color: $xts-button-color-remove;
+	color: #FFF;
+
+	&:hover {
+		background-color: $xts-button-color-remove-hover;
+	}
+
+	&:hover,
+	&:focus {
+		color: #FFF;
+	}
+}
+
+.xts-inline-btn {
+	display: inline-block;
+	text-transform: uppercase;
+	font-weight: 600;
+	cursor: pointer;
+	width: auto !important;
+	transition: all .2s ease-in-out;
+
+	&:before {
+		position: relative;
+		bottom: -1px;
+		font-family: "dashicons";
+		margin-right: 3px;
+		vertical-align: top;
+		font-weight: 400;
+	}
+
+	&:hover {
+		opacity: .8;
+	}
+
+	&:focus {
+		box-shadow: none;
+		outline: none;
+	}
+}
+
+.xts-inline-btn-add {
+	color: $xts-color-primary;
+	
+	&:before {
+		content: "\f502";
+	}
+	
+}
+
+.xts-inline-btn-remove {
+	color: $xts-button-color-remove;
+
+	&:before {
+		content: "\f182";
+	}
+}
+
+:is(
+.xts-btn,
+.xts-bordered-btn,
+.xts-inline-btn) {
+
+	&.xts-style-icon {
+		// font-size: 0;
+
+		&:before {
+			margin: 0;
+			font-size: 14px;
+		}
+	}
+}
+
+:is(
+.xts-btn,
+.xts-bordered-btn) {
+
+	// &:before {
+	// 	margin-inline-end: 5px;
+	// 	vertical-align: middle;
+	// }
+
+	&.xts-style-icon {
+		padding: 0 12px;
+	}
+}
+
+// -------------------------------
+// BRDERED
+// -------------------------------
+
+.xts-bordered-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 15px;
+	height: $xts-option-input-height;
+	outline: none !important;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 4px;
+	white-space: nowrap;
+	font-size: 12px;
+	line-height: 1;
+	cursor: pointer;
+	transition: .2s all ease-in-out;
+	transform: none;
+
+	//**** COLOR WARNING BTN ****//
+
+	&.xts-color-warning {
+		border-color: $xts-button-color-remove;
+		color: $xts-button-color-remove;
+
+		&:hover,
+		&:focus {
+			border-color: $xts-button-color-remove-hover;
+			background-color: #F7F7F7;
+			color: $xts-button-color-remove !important;
+		}
+	}
+
+	&:hover,
+	&:focus {
+		box-shadow: none;
+	}
+}
+
+//**** BTN ICONS ****//
+
+[class*="xts-i-"] {
+
+	&:before {
+		font-family: dashicons;
+	}
+}
+
+.xts-i-close {
+	
+	&:before {
+		content: "\f335";
+	}
+}

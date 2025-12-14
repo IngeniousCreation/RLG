@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: rlg_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: u160821579_qQ7j0
+      MYSQL_USER: u160821579_PLz6S
+      MYSQL_PASSWORD: K69czUnlNw
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./u160821579_qQ7j0.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3307:3306"
+    networks:
+      - wordpress_network
+
+  wordpress:
+    image: wordpress:latest
+    container_name: rlg_wordpress
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: u160821579_qQ7j0
+      WORDPRESS_DB_USER: u160821579_PLz6S
+      WORDPRESS_DB_PASSWORD: K69czUnlNw
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8081:80"
+    networks:
+      - wordpress_network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: rlg_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8082:80"
+    networks:
+      - wordpress_network
+
+volumes:
+  db_data:
+
+networks:
+  wordpress_network:
+    driver: bridge
+

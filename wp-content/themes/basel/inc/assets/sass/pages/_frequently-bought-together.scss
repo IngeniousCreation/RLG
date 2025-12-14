@@ -1,0 +1,113 @@
+// ------------------------------------------------------------------------------------------------
+// FREQUENTLY BOUGHT TOGETHER
+// ------------------------------------------------------------------------------------------------
+
+.xts-bundle {
+	display: flex;
+
+	> div {
+
+		&:not(:last-child) {
+			margin-inline-end: 15px;
+		}
+	}
+}
+
+.xts-bundle-name {
+	width: 300px;
+}
+
+// ------------------------------------------
+// SINGLE PRODUCT OPTIONS
+// ------------------------------------------
+
+.xts-bought-together-controls {
+
+	a {
+		display: inline-block;
+		margin-top: 10px;
+		margin-inline-start: 10px;
+	}
+
+	.select2-container--xts {
+
+		.select2-selection--single {
+
+			.select2-selection__arrow {
+				background-image: none !important;
+				border-left: none;
+				
+				&:before {
+					top: 3px;
+					inset-inline-start: 3px;
+				}
+			}
+		}
+	}
+}
+
+// ------------------------------------------
+// FIELD NUMBER INPUT APPEND
+// ------------------------------------------
+
+.xts-field {
+
+	&.xts-field-input-append {
+
+		input[type="number"] {
+			max-width: 58px !important;
+			width: 100%;
+			height: $xts-option-input-height;
+
+			border-start-end-radius: 0 !important;
+			border-end-end-radius: 0 !important;
+		}
+
+		.xts-option-control {
+			display: flex;
+
+			&:after {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-sizing: border-box;
+				padding-right: 2px;
+				padding-left: 2px;
+				width: 30px;
+				height: $xts-option-input-height;
+				border: 1px solid rgba(16, 16, 16, .08);
+				border-inline-start: 0;
+				background-color: #EFEFF0;
+				text-align: center;
+				font-weight: 600;
+				line-height: 32px;
+				user-select: none;
+
+				border-start-end-radius: 4px;
+				border-end-end-radius: 4px;
+			}
+		}
+
+		&.xts-input-percent {
+
+			.xts-option-control {
+
+				&:after {
+					content: "%";
+				}
+			}
+		}
+	}
+}
+
+.xts-input-append {
+	display: flex;
+
+	input[type="number"] {
+		max-width: 58px !important;
+		height: $xts-option-input-height;
+
+		border-start-end-radius: 0 !important;
+		border-end-end-radius: 0 !important;
+	}
+}

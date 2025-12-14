@@ -1,0 +1,49 @@
+# Augment Ignore File
+# Add patterns of files and folders to exclude from Augment indexing
+# Uses the same syntax as .gitignore
+
+# WordPress core files (typically don't need indexing)
+wp-admin/
+wp-includes/
+
+# Uploaded files and media
+wp-content/uploads/
+wp-content/uploads-webpc/
+
+# Cache and temporary files
+wp-content/cache/
+wp-content/wphb-cache/
+wp-content/wflogs/
+wp-content/upgrade/
+wp-content/upgrade-temp-backup/
+wp-content/wp-rocket-config/
+
+# Logs
+wp-content/logs/
+*.log
+
+# Optimization and compression
+wp-content/ewww/
+wp-content/smush-webp/
+wp-content/webp-express/
+
+# Database dumps
+*.sql
+
+# Compressed files
+*.zip
+
+# Large vendor/dependency folders (uncomment if needed)
+# wp-content/plugins/*/vendor/
+# wp-content/themes/*/node_modules/
+
+# Specific files
+google4e4de640062392a7.html
+robots.txt
+
+# Docker files (documentation can be excluded)
+README-DOCKER.md
+
+# To include files that are in .gitignore, use ! prefix
+# Example: !node_modules
+
