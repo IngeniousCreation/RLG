@@ -1,0 +1,238 @@
+/* Product Tabs Styling */
+
+/* Override Basel theme tab styles with maximum specificity */
+body .woocommerce-tabs.tabs-layout-tabs ul.tabs.wc-tabs li a,
+body.single-product .woocommerce-tabs.tabs-layout-tabs ul.tabs.wc-tabs li a,
+.tabs-layout-tabs ul.tabs.wc-tabs li a,
+.woocommerce-tabs .tabs.wc-tabs li a {
+    display: block !important;
+    padding: 15px 30px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: #666 !important;
+    text-decoration: none !important;
+    border: none !important;
+    background: transparent !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    width: auto !important;
+}
+
+body .woocommerce-tabs.tabs-layout-tabs ul.tabs.wc-tabs li a:hover,
+body.single-product .woocommerce-tabs.tabs-layout-tabs ul.tabs.wc-tabs li a:hover,
+.tabs-layout-tabs ul.tabs.wc-tabs li a:hover,
+.woocommerce-tabs .tabs.wc-tabs li a:hover {
+    color: #333 !important;
+    background: #f9f9f9 !important;
+}
+
+body .woocommerce-tabs.tabs-layout-tabs ul.tabs.wc-tabs li.active a,
+body.single-product .woocommerce-tabs.tabs-layout-tabs ul.tabs.wc-tabs li.active a,
+.tabs-layout-tabs ul.tabs.wc-tabs li.active a,
+.woocommerce-tabs .tabs.wc-tabs li.active a {
+    color: #000 !important;
+    background: #f9f9f9 !important;
+    border-bottom: none !important;
+    padding: 15px 30px !important;
+    width: auto !important;
+}
+
+.tabs-layout-tabs ul.tabs.wc-tabs li.active a::after,
+.woocommerce-tabs .tabs.wc-tabs li.active a::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: -2px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 40px !important;
+    height: 3px !important;
+    background: #333 !important;
+    z-index: 1 !important;
+    border-radius: 2px !important;
+}
+
+/* Tab Navigation */
+.tabs-layout-tabs ul.tabs.wc-tabs,
+.woocommerce-tabs .tabs.wc-tabs {
+    display: flex !important;
+    gap: 0 !important;
+    list-style: none !important;
+    margin: 0 0 30px 0 !important;
+    padding: 0 !important;
+    border-bottom: 2px solid #e0e0e0 !important;
+}
+
+.tabs-layout-tabs ul.tabs.wc-tabs li,
+.woocommerce-tabs .tabs.wc-tabs li {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Tab Content */
+.woocommerce-tabs .woocommerce-Tabs-panel {
+    padding: 30px 0;
+    background: transparent;
+    border: none;
+}
+
+.woocommerce-tabs .woocommerce-Tabs-panel h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.woocommerce-tabs .woocommerce-Tabs-panel p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.woocommerce-tabs .woocommerce-Tabs-panel img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 20px;
+    border-radius: 0;
+}
+
+/* Shipping & Returns Content Styling */
+.rlg-shipping-returns-content h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rlg-policy-section {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.rlg-policy-section:last-of-type {
+    border-bottom: none;
+}
+
+.rlg-policy-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.rlg-policy-section ul,
+.rlg-policy-section ol {
+    margin: 0 0 0 20px;
+    padding: 0;
+}
+
+.rlg-policy-section li {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.rlg-policy-section li strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.rlg-policy-section p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #666;
+    margin: 0;
+}
+
+.rlg-policy-section a {
+    color: #000;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.rlg-policy-section a:hover {
+    color: #666;
+}
+
+.rlg-policy-contact {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-left: 3px solid #333;
+}
+
+.rlg-policy-contact p {
+    margin: 0;
+    font-size: 15px;
+    color: #333;
+}
+
+.rlg-policy-contact a {
+    color: #000;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* Accordion Style for Mobile */
+@media (max-width: 768px) {
+    .woocommerce-tabs .tabs.wc-tabs {
+        display: none;
+    }
+    
+    .basel-tab-wrapper {
+        border: 1px solid #e0e0e0;
+        margin-bottom: 10px;
+    }
+    
+    .basel-accordion-title {
+        display: block;
+        padding: 15px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #333;
+        background: #fff;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        text-decoration: none;
+    }
+    
+    .basel-accordion-title::after {
+        content: '+';
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        font-weight: 400;
+    }
+    
+    .basel-accordion-title.active::after {
+        content: '−';
+    }
+    
+    .woocommerce-tabs .woocommerce-Tabs-panel {
+        padding: 20px;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    .woocommerce-tabs .woocommerce-Tabs-panel h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+}
+

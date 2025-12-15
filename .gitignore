@@ -1,6 +1,12 @@
 # Ignore everything at root level
 /*
 
+# Ignore documentation files
+*.md
+!README.md
+*.txt
+*.html
+
 # Allow only wp-content directory
 !wp-content/
 

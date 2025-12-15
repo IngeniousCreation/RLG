@@ -5,6 +5,7 @@ services:
     image: mysql:8.0
     container_name: rlg_mysql
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_DATABASE: u160821579_qQ7j0
       MYSQL_USER: u160821579_PLz6S
@@ -13,6 +14,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./u160821579_qQ7j0.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql-custom.cnf:/etc/mysql/conf.d/custom.cnf
     ports:
       - "3307:3306"
     networks:
@@ -31,6 +33,7 @@ services:
       WORDPRESS_DB_PASSWORD: K69czUnlNw
     volumes:
       - ./:/var/www/html
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     ports:
       - "8081:80"
     networks:
