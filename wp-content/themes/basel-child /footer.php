@@ -23,8 +23,6 @@
 
 				<!-- Left Section: Customer Services -->
 				<div class="rlg-footer-left">
-					<p class="rlg-footer-description">Real Leather Garments offers 10 years of expertise in delivering elegant, durable, and comfortable real leather jackets goods with a commitment to excellence and customer satisfaction.</p>
-
 					<details class="rlg-footer-accordion" open>
 						<summary class="rlg-footer-accordion-title">
 							<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -45,6 +43,8 @@
 							</ul>
 						</div>
 					</details>
+
+					<p class="rlg-footer-description">Real Leather Garments offers 10 years of expertise in delivering elegant, durable, and comfortable real leather jackets goods with a commitment to excellence and customer satisfaction.</p>
 				</div>
 
 				<!-- Right Section: Logo, Newsletter & Social -->
