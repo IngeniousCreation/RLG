@@ -34,11 +34,11 @@ function rlg_get_best_selling_ids() {
         
         $products = $wpdb->get_col($query);
         $ids = implode(',', $products);
-        
+
         // Cache for 24 hours
-        set_option('rlg_best_selling_ids', $ids);
+        update_option('rlg_best_selling_ids', $ids);
     }
-    
+
     return $ids;
 }
 
@@ -46,29 +46,35 @@ function rlg_get_best_selling_ids() {
  * Get category configurations for homepage
  */
 function rlg_get_homepage_categories() {
+    // Helper function to safely get term ID
+    $get_term_id = function($slug) {
+        $term = get_term_by('slug', $slug, 'product_cat');
+        return $term ? $term->term_id : 0;
+    };
+
     return array(
         array(
             'id' => 'mens-jackets',
             'name' => "Men's Leather Jackets",
-            'term_id' => get_term_by('slug', 'mens-leather-jackets', 'product_cat')->term_id ?? 0,
+            'term_id' => $get_term_id('mens-leather-jackets'),
             'items' => 8
         ),
         array(
             'id' => 'womens-jackets',
             'name' => "Women's Leather Jackets",
-            'term_id' => get_term_by('slug', 'womens-leather-jackets', 'product_cat')->term_id ?? 0,
+            'term_id' => $get_term_id('womens-leather-jackets'),
             'items' => 8
         ),
         array(
             'id' => 'celebrity-jackets',
             'name' => 'Celebrity Jackets',
-            'term_id' => get_term_by('slug', 'celebrity-jackets', 'product_cat')->term_id ?? 0,
+            'term_id' => $get_term_id('celebrity-jackets'),
             'items' => 8
         ),
         array(
             'id' => 'biker-jackets',
             'name' => 'Biker Jackets',
-            'term_id' => get_term_by('slug', 'biker-jackets', 'product_cat')->term_id ?? 0,
+            'term_id' => $get_term_id('biker-jackets'),
             'items' => 8
         ),
     );
