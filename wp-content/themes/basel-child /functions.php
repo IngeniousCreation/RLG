@@ -27,6 +27,11 @@ if (!function_exists('rlg_fix_google_listings_null_post')) {
     add_action('init', 'rlg_fix_google_listings_null_post', 999);
 }
 
+/**
+ * Include static homepage configuration
+ */
+require_once get_stylesheet_directory() . '/inc/static-homepage-config.php';
+
 add_action( 'wp_enqueue_scripts', 'basel_child_enqueue_styles', 1000 );
 
 function basel_child_enqueue_styles() {
