@@ -11,7 +11,8 @@
 !wp-content/
 
 # Ignore files/folders inside wp-content
-wp-content/plugins/
+wp-content/plugins/*
+!wp-content/plugins/basel-shortcodes-lite/
 wp-content/uploads/
 wp-content/uploads-webpc/
 wp-content/cache/
