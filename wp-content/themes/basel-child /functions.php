@@ -1273,21 +1273,18 @@ function rlg_display_size_chart_button() {
 
     ?>
     <div class="rlg-size-chart-button-wrapper">
-        <button type="button" class="rlg-size-chart-button" data-image="<?php echo esc_url($size_chart_image_url); ?>">
+        <a href="<?php echo esc_url($size_chart_image_url); ?>"
+           class="rlg-size-chart-button glightbox"
+           data-gallery="size-chart"
+           data-glightbox="type: image; title: Size Chart; description: .rlg-size-chart-desc;">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 2h12v12H2V2zm1 1v10h10V3H3zm1 1h8v1H4V4zm0 2h8v1H4V6zm0 2h8v1H4V8zm0 2h5v1H4v-1z"/>
             </svg>
-            <?php _e('Size Chart', 'basel-child'); ?>
-        </button>
+            <span><?php _e('Size Chart', 'basel-child'); ?></span>
+        </a>
     </div>
-
-    <!-- Size Chart Modal -->
-    <div id="rlg-size-chart-modal" class="rlg-size-chart-modal" style="display: none;">
-        <div class="rlg-size-chart-modal-overlay"></div>
-        <div class="rlg-size-chart-modal-content">
-            <button type="button" class="rlg-size-chart-modal-close">&times;</button>
-            <img src="<?php echo esc_url($size_chart_image_url); ?>" alt="<?php _e('Size Chart', 'basel-child'); ?>" />
-        </div>
+    <div class="rlg-size-chart-desc" style="display: none;">
+        <p>Click and drag to move the image. Use mouse wheel or pinch to zoom.</p>
     </div>
     <?php
 }
@@ -1300,7 +1297,16 @@ function rlg_enqueue_size_chart_assets() {
         return;
     }
 
-    // Inline CSS for size chart
+    // Enqueue lazy-load lightbox script
+    wp_enqueue_script(
+        'rlg-lazy-load-lightbox',
+        get_stylesheet_directory_uri() . '/assets/js/lazy-load-lightbox.js',
+        array(),
+        '1.0.0',
+        true
+    );
+
+    // Inline CSS for size chart button only (lightbox CSS loads on interaction)
     wp_add_inline_style('child-style', '
         .rlg-size-chart-button-wrapper {
             margin: 15px 0;
@@ -1318,12 +1324,8 @@ function rlg_enqueue_size_chart_assets() {
             font-size: 14px;
             font-weight: 500;
             color: #333;
-            transition: all 0.3s ease;
-        }
-
-        .rlg-size-chart-button:hover {
-            background: #f5f5f5;
-            border-color: #999;
+            text-decoration: none;
+            transition: none;
         }
 
         .rlg-size-chart-button svg {
@@ -1331,123 +1333,16 @@ function rlg_enqueue_size_chart_assets() {
             height: 16px;
         }
 
-        .rlg-size-chart-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 999999;
-        }
-
-        .rlg-size-chart-modal-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-        }
-
-        .rlg-size-chart-modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 90vw;
-            max-height: 90vh;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            overflow: auto;
-        }
-
-        .rlg-size-chart-modal-content img {
-            display: block;
-            width: auto;
-            height: auto;
-            max-width: 100%;
-            max-height: calc(90vh - 80px);
-            margin: 0 auto;
-            object-fit: contain;
-        }
-
-        .rlg-size-chart-modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
-            background: #fff;
-            border: none;
-            border-radius: 10px;
-            font-size: 24px;
-            line-height: 1;
-            cursor: pointer;
-            color: #333;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            z-index: 10;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .rlg-size-chart-modal-close:hover {
-            background: #f5f5f5;
+        .rlg-size-chart-desc {
+            display: none;
         }
 
         @media (max-width: 768px) {
             .rlg-size-chart-button {
-                position: relative;
-                z-index: 999999;
-            }
-
-            .rlg-size-chart-modal-content {
-                max-width: 95vw;
-                max-height: 95vh;
-                padding: 15px;
-            }
-
-            .rlg-size-chart-modal-content img {
-                max-height: calc(95vh - 60px);
-            }
-
-            .rlg-size-chart-modal-close {
-                width: 28px;
-                height: 28px;
-                font-size: 20px;
-                border-radius: 8px;
+                font-size: 13px;
+                padding: 8px 16px;
             }
         }
-    ');
-
-    // Inline JavaScript for size chart modal
-    wp_add_inline_script('jquery', '
-        jQuery(document).ready(function($) {
-            // Open modal
-            $(document).on("click", ".rlg-size-chart-button", function(e) {
-                e.preventDefault();
-                $("#rlg-size-chart-modal").fadeIn(300);
-                $("body").css("overflow", "hidden");
-            });
-
-            // Close modal
-            $(document).on("click", ".rlg-size-chart-modal-close, .rlg-size-chart-modal-overlay", function(e) {
-                e.preventDefault();
-                $("#rlg-size-chart-modal").fadeOut(300);
-                $("body").css("overflow", "");
-            });
-
-            // Close on ESC key
-            $(document).on("keydown", function(e) {
-                if (e.key === "Escape" && $("#rlg-size-chart-modal").is(":visible")) {
-                    $("#rlg-size-chart-modal").fadeOut(300);
-                    $("body").css("overflow", "");
-                }
-            });
-        });
     ');
 }
 add_action('wp_enqueue_scripts', 'rlg_enqueue_size_chart_assets', 1001);
