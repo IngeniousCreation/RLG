@@ -64,8 +64,9 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background-color: #000;
-    color: #fff;
+    border : 1px solid black !important;
+    background-color: white !important;
+   
     border: none;
     padding: 12px 24px;
     font-size: 14px;
@@ -76,11 +77,10 @@
     margin-top: 15px;
     width: 100%;
     justify-content: center;
+    max-width: 30vw;
 }
 
-.rlg-customize-button:hover {
-    background-color: #333;
-}
+
 
 .rlg-customize-button svg {
     width: 18px;
@@ -93,6 +93,10 @@
         width: 100%;
         padding: 14px 24px;
         font-size: 13px;
+        max-width: 100% !important;
+    }
+    .rlg-measurement-notice{
+        max-width: 100% !important;
     }
 }
 
@@ -101,12 +105,13 @@
     display: inline-flex;
     align-items: flex-start;
     gap: 12px;
-    background-color: #fff3cd;
-    border: 1px solid #ffc107;
+    background-color: #fff8e1;
+   
     border-radius: 4px;
     padding: 15px;
     margin-top: 15px;
     width: 100%;
+    max-width: 30vw;
 }
 
 .rlg-notice-icon {
