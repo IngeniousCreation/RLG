@@ -54,3 +54,466 @@
     margin-bottom: 0 !important;
   }
 }
+
+/* ========================================
+   CUSTOM JACKET FORM STYLES
+   ======================================== */
+
+/* Customize Button */
+.rlg-customize-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    width: 100%;
+    justify-content: center;
+}
+
+.rlg-customize-button:hover {
+    background-color: #333;
+}
+
+.rlg-customize-button svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Mobile: Full width button */
+@media (max-width: 768px) {
+    .rlg-customize-button {
+        width: 100%;
+        padding: 14px 24px;
+        font-size: 13px;
+    }
+}
+
+/* Measurement Notice */
+.rlg-measurement-notice {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+    padding: 15px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.rlg-notice-icon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    color: #856404;
+}
+
+.rlg-notice-text {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #856404;
+}
+
+/* Mobile: Stack icon and text */
+@media (max-width: 768px) {
+    .rlg-measurement-notice {
+        padding: 12px;
+    }
+
+    .rlg-notice-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .rlg-notice-text {
+        font-size: 12px;
+    }
+}
+
+/* Product Accordion */
+.rlg-product-accordion {
+    margin-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.rlg-accordion-item {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.rlg-accordion-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+
+.rlg-accordion-title::-webkit-details-marker {
+    display: none;
+}
+
+.rlg-accordion-title-text {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #000;
+}
+
+.rlg-accordion-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.rlg-icon-minus {
+    display: none;
+}
+
+details[open] .rlg-icon-plus {
+    display: none;
+}
+
+details[open] .rlg-icon-minus {
+    display: block;
+}
+
+.rlg-accordion-content {
+    padding: 0 0 20px 0;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #666;
+}
+
+.rlg-accordion-content ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.rlg-accordion-content li {
+    margin-bottom: 10px;
+}
+
+/* Mobile: Adjust accordion spacing */
+@media (max-width: 768px) {
+    .rlg-accordion-title {
+        padding: 15px 0;
+    }
+
+    .rlg-accordion-title-text {
+        font-size: 13px;
+    }
+
+    .rlg-accordion-content {
+        font-size: 13px;
+        padding-bottom: 15px;
+    }
+}
+
+/* Product Share Section */
+.rlg-product-share {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.rlg-share-title {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #000;
+}
+
+.rlg-social-icons {
+    display: flex;
+    gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.rlg-social-icons li a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #666;
+    transition: all 0.3s ease;
+    font-size: 13px;
+}
+
+.rlg-social-icons li a:hover {
+    background-color: #f5f5f5;
+    border-color: #000;
+    color: #000;
+}
+
+.rlg-social-icons svg {
+    width: 16px;
+    height: 16px;
+}
+
+.rlg-social-icon-name {
+    display: none;
+}
+
+/* Mobile: Hide social icon names, show only icons */
+@media (max-width: 768px) {
+    .rlg-product-share {
+        flex-wrap: wrap;
+    }
+
+    .rlg-social-icons {
+        gap: 8px;
+    }
+
+    .rlg-social-icons li a {
+        padding: 8px;
+    }
+}
+
+/* Modal Styles */
+.rlg-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rlg-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+.rlg-modal-content {
+    position: relative;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 40px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 2;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.rlg-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.rlg-modal-close:hover {
+    color: #000;
+}
+
+.rlg-modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 30px 0;
+    text-align: center;
+    color: #000;
+}
+
+/* Mobile: Full width modal */
+@media (max-width: 768px) {
+    .rlg-modal-content {
+        width: 95%;
+        padding: 30px 20px;
+        max-height: 95vh;
+    }
+
+    .rlg-modal-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+/* Form Styles */
+.rlg-custom-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.rlg-form-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.rlg-form-field {
+    flex: 1;
+    min-width: 0;
+}
+
+.rlg-col-50 {
+    flex: 1 1 calc(50% - 7.5px);
+}
+
+.rlg-col-100 {
+    flex: 1 1 100%;
+}
+
+.rlg-input,
+.rlg-select,
+.rlg-textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+    background-color: #fff;
+}
+
+.rlg-input:focus,
+.rlg-select:focus,
+.rlg-textarea:focus {
+    outline: none;
+    border-color: #000;
+}
+
+.rlg-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 35px;
+}
+
+.rlg-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.rlg-file-label {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.rlg-file-label:hover {
+    border-color: #000;
+    background-color: #f5f5f5;
+}
+
+.rlg-file-text {
+    font-size: 14px;
+    color: #666;
+}
+
+.rlg-file-input {
+    display: none;
+}
+
+.rlg-submit-button {
+    width: 100%;
+    padding: 15px 30px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.rlg-submit-button:hover {
+    background-color: #333;
+}
+
+.rlg-submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.rlg-form-message {
+    padding: 15px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.rlg-form-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.rlg-form-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Mobile: Stack form fields */
+@media (max-width: 768px) {
+    .rlg-col-50 {
+        flex: 1 1 100%;
+    }
+
+    .rlg-form-row {
+        gap: 12px;
+    }
+
+    .rlg-input,
+    .rlg-select,
+    .rlg-textarea {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
