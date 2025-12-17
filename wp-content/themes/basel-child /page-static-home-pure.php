@@ -9,6 +9,29 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Add script to block font loading before header
+add_action('wp_head', function() {
+    ?>
+    <script id="rlg-font-blocker">
+    // Block all font loading immediately
+    (function() {
+        'use strict';
+        window.fontsBlocked = true;
+        console.log('🚫 Font loading blocked by RLG');
+
+        // Prevent old font loader from running
+        window.addEventListener('DOMContentLoaded', function() {
+            var oldLoader = document.getElementById('basel-lazy-font-loader');
+            if (oldLoader) {
+                oldLoader.remove();
+                console.log('Removed old font loader');
+            }
+        });
+    })();
+    </script>
+    <?php
+}, 1);
+
 get_header();
 ?>
 

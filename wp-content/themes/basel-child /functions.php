@@ -557,6 +557,9 @@ $basel_lazy_font_urls = array();
 function basel_child_capture_font_urls() {
     global $wp_styles, $basel_lazy_font_urls;
 
+    // Initialize array
+    $basel_lazy_font_urls = array();
+
     // Capture Google Fonts URL
     if ( isset( $wp_styles->registered['xts-google-fonts'] ) ) {
         $basel_lazy_font_urls['google_fonts'] = $wp_styles->registered['xts-google-fonts']->src;
@@ -575,6 +578,11 @@ function basel_child_capture_font_urls() {
     if ( isset( $wp_styles->registered['vc_font_awesome_5_shims'] ) ) {
         $basel_lazy_font_urls['font_awesome_shims'] = $wp_styles->registered['vc_font_awesome_5_shims']->src;
     }
+
+    // Capture CDN Font Awesome if exists
+    if ( isset( $wp_styles->registered['font-awesome'] ) ) {
+        $basel_lazy_font_urls['font_awesome_cdn'] = $wp_styles->registered['font-awesome']->src;
+    }
 }
 add_action( 'wp_enqueue_scripts', 'basel_child_capture_font_urls', 50000 );
 
@@ -590,14 +598,56 @@ function basel_child_dequeue_fonts() {
     wp_dequeue_style( 'basel-typekit' );
     wp_deregister_style( 'basel-typekit' );
 
-    // Dequeue Font Awesome
+    // Dequeue Font Awesome (all variants)
     wp_dequeue_style( 'vc_font_awesome_5' );
     wp_deregister_style( 'vc_font_awesome_5' );
     wp_dequeue_style( 'vc_font_awesome_5_shims' );
     wp_deregister_style( 'vc_font_awesome_5_shims' );
     wp_dequeue_style( 'yith-wcwl-font-awesome' );
+    wp_deregister_style( 'yith-wcwl-font-awesome' );
+    wp_dequeue_style( 'font-awesome' );
+    wp_deregister_style( 'font-awesome' );
+    wp_dequeue_style( 'fontawesome' );
+    wp_deregister_style( 'fontawesome' );
+
+    // Dequeue plugin font CSS files - try multiple hooks
+    wp_dequeue_style( 'xoo-wsc-fonts' ); // Side Cart fonts
+    wp_deregister_style( 'xoo-wsc-fonts' );
+
+    // Dequeue Google Site Kit CSS (contains Google Sans font)
+    wp_dequeue_style( 'googlesitekit-admin-css' );
+    wp_deregister_style( 'googlesitekit-admin-css' );
 }
 add_action( 'wp_enqueue_scripts', 'basel_child_dequeue_fonts', 99999 );
+
+/**
+ * Remove Side Cart fonts with even higher priority
+ */
+function basel_child_remove_sidecart_fonts() {
+    wp_dequeue_style( 'xoo-wsc-fonts' );
+    wp_deregister_style( 'xoo-wsc-fonts' );
+}
+add_action( 'wp_enqueue_scripts', 'basel_child_remove_sidecart_fonts', 999999 );
+add_action( 'wp_print_styles', 'basel_child_remove_sidecart_fonts', 999999 );
+
+/**
+ * Remove font preload links from header
+ */
+function basel_child_remove_font_preloads() {
+    remove_action( 'wp_head', 'basel_font_icon_preload' );
+}
+add_action( 'init', 'basel_child_remove_font_preloads', 1 );
+
+/**
+ * Remove @font-face declarations from dynamic CSS
+ * We'll load them via JavaScript on user interaction
+ */
+function basel_child_remove_icon_fonts_from_css( $css ) {
+    // Remove all @font-face declarations
+    $css = preg_replace( '/@font-face\s*\{[^}]+\}/s', '', $css );
+    return $css;
+}
+add_filter( 'basel_get_all_theme_settings_css', 'basel_child_remove_icon_fonts_from_css', 999 );
 
 /**
  * Add critical CSS to prevent FOUT (Flash of Unstyled Text)
@@ -627,108 +677,35 @@ function basel_child_font_loading_css() {
 add_action( 'wp_head', 'basel_child_font_loading_css', 1 );
 
 /**
- * Add lazy load font script to footer
+ * Enqueue lazy load fonts script
  */
-function basel_child_lazy_load_fonts_script() {
+function basel_child_enqueue_lazy_load_fonts_script() {
     global $basel_lazy_font_urls;
 
-    if ( empty( $basel_lazy_font_urls ) ) {
-        return;
-    }
-    ?>
-    <script id="basel-lazy-font-loader">
-    (function() {
-        'use strict';
+    // Enqueue the external JS file
+    wp_enqueue_script(
+        'basel-lazy-load-fonts',
+        get_stylesheet_directory_uri() . '/assets/js/lazy-load-fonts.js',
+        array(),
+        '1.0.2',
+        true // Load in footer
+    );
 
-        var fontsLoaded = false;
-        var fontUrls = <?php echo wp_json_encode( $basel_lazy_font_urls ); ?>;
+    // Prepare font URLs array
+    $font_urls = ! empty( $basel_lazy_font_urls ) ? $basel_lazy_font_urls : array();
 
-        // Function to load fonts
-        function loadFonts() {
-            if (fontsLoaded) return;
-            fontsLoaded = true;
+    // Add theme URL and version for icon fonts
+    $font_urls['theme_url'] = BASEL_THEME_DIR;
+    $font_urls['version'] = basel_get_theme_info( 'Version' );
 
-            console.log('🎨 Loading fonts on user interaction...');
-
-            // Load Google Fonts
-            if (fontUrls.google_fonts) {
-                var googleLink = document.createElement('link');
-                googleLink.rel = 'stylesheet';
-                googleLink.href = fontUrls.google_fonts;
-                googleLink.id = 'xts-google-fonts-lazy';
-                document.head.appendChild(googleLink);
-                console.log('✓ Google Fonts loaded');
-            }
-
-            // Load Typekit
-            if (fontUrls.typekit) {
-                var typekitLink = document.createElement('link');
-                typekitLink.rel = 'stylesheet';
-                typekitLink.href = fontUrls.typekit;
-                typekitLink.id = 'basel-typekit-lazy';
-                document.head.appendChild(typekitLink);
-                console.log('✓ Typekit fonts loaded');
-            }
-
-            // Load Font Awesome
-            if (fontUrls.font_awesome) {
-                var faLink = document.createElement('link');
-                faLink.rel = 'stylesheet';
-                faLink.href = fontUrls.font_awesome;
-                faLink.id = 'vc_font_awesome_5-lazy';
-                document.head.appendChild(faLink);
-                console.log('✓ Font Awesome loaded');
-            }
-
-            // Load Font Awesome Shims
-            if (fontUrls.font_awesome_shims) {
-                var faShimsLink = document.createElement('link');
-                faShimsLink.rel = 'stylesheet';
-                faShimsLink.href = fontUrls.font_awesome_shims;
-                faShimsLink.id = 'vc_font_awesome_5_shims-lazy';
-                document.head.appendChild(faShimsLink);
-                console.log('✓ Font Awesome Shims loaded');
-            }
-
-            // Remove event listeners after loading
-            removeEventListeners();
-        }
-
-        // Event listeners for user interaction
-        var events = ['scroll', 'mousemove', 'touchstart', 'click', 'keydown'];
-
-        function addEventListeners() {
-            events.forEach(function(event) {
-                window.addEventListener(event, loadFonts, { passive: true, once: true });
-            });
-        }
-
-        function removeEventListeners() {
-            events.forEach(function(event) {
-                window.removeEventListener(event, loadFonts);
-            });
-        }
-
-        // Add event listeners when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', addEventListeners);
-        } else {
-            addEventListeners();
-        }
-
-        // Fallback: Load fonts after 3 seconds if no interaction
-        setTimeout(function() {
-            if (!fontsLoaded) {
-                console.log('⏱️ Loading fonts after 3s timeout (no interaction detected)');
-                loadFonts();
-            }
-        }, 3000);
-
-    })();
-    </script>
-    <?php
+    // Pass font URLs to the script
+    wp_localize_script(
+        'basel-lazy-load-fonts',
+        'baselLazyFontUrls',
+        $font_urls
+    );
 }
-add_action( 'wp_footer', 'basel_child_lazy_load_fonts_script', 999 );
+add_action( 'wp_enqueue_scripts', 'basel_child_enqueue_lazy_load_fonts_script', 999999 );
 
 /**
  * ============================================================================
@@ -1370,6 +1347,11 @@ function rlg_enqueue_size_chart_assets() {
         }
 
         @media (max-width: 768px) {
+            .rlg-size-chart-button {
+                position: relative;
+                z-index: 999999;
+            }
+
             .rlg-size-chart-modal-content {
                 max-width: 95vw;
                 max-height: 95vh;

@@ -10,3 +10,24 @@
 
 
 /* Your customizations starts here */
+
+/* Side Cart icon font classes - font will be loaded on user interaction */
+[class^="xoo-wsc-icon-"],
+[class*=" xoo-wsc-icon-"] {
+  font-family: 'Woo-Side-Cart' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mobile header margin fix */
+@media (max-width: 768px) {
+  .main-header {
+    margin-bottom: 0 !important;
+  }
+}
