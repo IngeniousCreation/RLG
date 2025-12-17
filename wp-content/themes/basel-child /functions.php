@@ -617,8 +617,60 @@ function basel_child_dequeue_fonts() {
     // Dequeue Google Site Kit CSS (contains Google Sans font)
     wp_dequeue_style( 'googlesitekit-admin-css' );
     wp_deregister_style( 'googlesitekit-admin-css' );
+
+    // Dequeue Google Merchant Center / Shopping scripts
+    wp_dequeue_script( 'google-shopping-merchant-api' );
+    wp_deregister_script( 'google-shopping-merchant-api' );
+    wp_dequeue_script( 'google-merchant-center' );
+    wp_deregister_script( 'google-merchant-center' );
 }
 add_action( 'wp_enqueue_scripts', 'basel_child_dequeue_fonts', 99999 );
+
+/**
+ * Remove Google Merchant Center iframe
+ */
+function basel_child_remove_google_merchant_iframe() {
+    ?>
+    <script>
+    // Remove Google Merchant Center iframe on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Remove any Google Shopping/Merchant iframes
+        var removeGoogleIframes = function() {
+            var iframes = document.querySelectorAll('iframe[src*="google.com/shopping"], iframe[src*="merchantverse"]');
+            iframes.forEach(function(iframe) {
+                console.log('🚫 Removing Google Merchant iframe:', iframe.src);
+                iframe.remove();
+            });
+        };
+
+        // Remove immediately
+        removeGoogleIframes();
+
+        // Also check after a delay (in case they load later)
+        setTimeout(removeGoogleIframes, 1000);
+        setTimeout(removeGoogleIframes, 3000);
+
+        // Watch for new iframes being added
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.tagName === 'IFRAME' && node.src && (node.src.includes('google.com/shopping') || node.src.includes('merchantverse'))) {
+                        console.log('🚫 Blocking Google Merchant iframe:', node.src);
+                        node.remove();
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+    </script>
+    <?php
+}
+add_action( 'wp_footer', 'basel_child_remove_google_merchant_iframe', 1 );
 
 /**
  * Remove Side Cart fonts with even higher priority

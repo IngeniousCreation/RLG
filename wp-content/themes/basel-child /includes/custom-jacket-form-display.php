@@ -302,10 +302,10 @@ function rlg_enqueue_custom_jacket_form_assets() {
     if (!is_product()) {
         return;
     }
-    
-    wp_enqueue_style('rlg-custom-jacket-form', get_stylesheet_directory_uri() . '/assets/css/custom-jacket-form.css', array(), '1.0.0');
-    wp_enqueue_script('rlg-custom-jacket-form', get_stylesheet_directory_uri() . '/assets/js/custom-jacket-form.js', array('jquery'), '1.0.0', true);
-    
+
+    // CSS is now in child theme style.css - no need to enqueue separate file
+    wp_enqueue_script('rlg-custom-jacket-form', get_stylesheet_directory_uri() . '/assets/js/custom-jacket-form.js', array('jquery'), '1.0.1', true);
+
     wp_localize_script('rlg-custom-jacket-form', 'rlgCustomForm', array(
         'ajax_url' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('rlg_custom_jacket_form')

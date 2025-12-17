@@ -11,7 +11,7 @@
 
 /* Your customizations starts here */
 
-/* Side Cart icon font classes - font will be loaded on user interaction */
+/* Side Cart icon - Replace icon font with SVG */
 [class^="xoo-wsc-icon-"],
 [class*=" xoo-wsc-icon-"] {
   font-family: 'Woo-Side-Cart' !important;
@@ -23,6 +23,29 @@
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Replace cart icon with SVG - hide font icon and show SVG */
+.xoo-wsc-bki {
+  font-size: 0 !important;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  position: relative;
+}
+
+.xoo-wsc-bki::before {
+  content: '' !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z'/%3E%3Cline x1='3' y1='6' x2='21' y2='6'/%3E%3Cpath d='M16 10a4 4 0 0 1-8 0'/%3E%3C/svg%3E") !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  font-size: 24px;
 }
 
 /* Mobile header margin fix */

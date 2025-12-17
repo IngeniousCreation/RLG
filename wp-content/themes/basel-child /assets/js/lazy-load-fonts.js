@@ -117,7 +117,7 @@
         // Load icon fonts (basel-font and simple-line-icons)
         loadIconFonts();
 
-        // Load plugin fonts (Side Cart, etc.)
+        // Load plugin fonts (Side Cart, etc.) - as fallback
         loadPluginFonts();
 
         // Remove event listeners after loading
