@@ -143,6 +143,8 @@
 .rlg-product-accordion {
     margin-top: 20px;
     border-top: 1px solid #e0e0e0;
+    width: 100%;
+    max-width: 32vw;
 }
 
 .rlg-accordion-item {
@@ -210,6 +212,10 @@ details[open] .rlg-icon-minus {
 
 /* Mobile: Adjust accordion spacing */
 @media (max-width: 768px) {
+    .rlg-product-accordion {
+        max-width: 100%;
+    }
+
     .rlg-accordion-title {
         padding: 15px 0;
     }
