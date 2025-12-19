@@ -1681,7 +1681,7 @@ function rlg_enqueue_size_chart_assets() {
         .rlg-size-chart-button-wrapper {
             margin: 15px 0;
             position: relative;
-            z-index: 99999;
+            z-index: 1;
         }
 
         .rlg-size-chart-button {

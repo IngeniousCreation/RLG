@@ -265,7 +265,7 @@ if (file_exists($sections_file)) {
 
 .rlg-content-section {
     margin: 60px 0;
-    padding: 40px 20px;
+    
 }
 
 .rlg-content-heading {
@@ -325,7 +325,7 @@ if (file_exists($sections_file)) {
 
     .rlg-content-section {
         margin: 40px 0;
-        padding: 20px 10px;
+        
     }
 
     .rlg-content-text h2 {
