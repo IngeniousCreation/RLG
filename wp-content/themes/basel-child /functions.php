@@ -1,5 +1,5 @@
 <?php
-
+add_shortcode('elementor-template', '__return_empty_string');
 /**
  * Fix for deprecated dynamic property warnings in Basel Theme (PHP 8.2+)
  */
@@ -32,6 +32,357 @@ if (!function_exists('rlg_fix_google_listings_null_post')) {
  */
 require_once get_stylesheet_directory() . '/inc/static-homepage-config.php';
 
+/**
+ * ============================================================================
+ * DISABLE PLUGIN JS/CSS ON STATIC HOMEPAGE
+ * ============================================================================
+ * Dramatically reduces page weight by removing unnecessary plugin assets
+ * while keeping header/footer intact
+ */
+function rlg_disable_plugins_on_static_home() {
+    // Check if it's the static home page template
+    if ( is_page_template( 'page-static-home-pure.php' ) || is_page_template( 'page-static-home.php' ) ) {
+
+        // Dequeue plugin styles
+        add_action( 'wp_print_styles', function() {
+            global $wp_styles;
+
+            // List of plugin CSS handles to disable
+            $plugin_styles = array(
+                // WooCommerce
+                'woocommerce-layout',
+                'woocommerce-smallscreen',
+                'woocommerce-general',
+                'wc-blocks-style',
+                'wc-blocks-vendors-style',
+
+                // Elementor
+                'elementor-frontend',
+                'elementor-post',
+                'elementor-global',
+                'elementor-icons',
+                'elementor-animations',
+
+                // Contact Form 7
+                'contact-form-7',
+
+                // Yoast SEO
+                'yoast-seo-adminbar',
+
+                // Side Cart
+                'xoo-wsc-public',
+                'xoo-wsc-fonts',
+
+                // Visual Composer / WPBakery
+                'js_composer_front',
+                'js_composer',
+
+                // Other common plugins
+                'wp-block-library',
+                'wp-block-library-theme',
+                'wc-block-style',
+                'global-styles',
+            );
+
+            foreach ( $plugin_styles as $handle ) {
+                wp_dequeue_style( $handle );
+                wp_deregister_style( $handle );
+            }
+        }, 100 );
+
+        // Dequeue plugin scripts
+        add_action( 'wp_print_scripts', function() {
+            global $wp_scripts;
+
+            // List of plugin JS handles to disable
+            $plugin_scripts = array(
+                // WooCommerce
+                'wc-add-to-cart',
+                'wc-cart-fragments',
+                'woocommerce',
+                'wc-add-to-cart-variation',
+                'wc-single-product',
+                'wc-checkout',
+                'wc-cart',
+
+                // Elementor
+                'elementor-frontend',
+                'elementor-webpack-runtime',
+                'elementor-frontend-modules',
+
+                // Contact Form 7
+                'contact-form-7',
+
+                // Side Cart
+                'xoo-wsc-public',
+
+                // Other common plugins
+                'wp-embed',
+            );
+
+            foreach ( $plugin_scripts as $handle ) {
+                wp_dequeue_script( $handle );
+                wp_deregister_script( $handle );
+            }
+        }, 100 );
+
+        // Remove WooCommerce body classes
+        add_filter( 'body_class', function( $classes ) {
+            $classes = array_diff( $classes, array(
+                'woocommerce',
+                'woocommerce-page',
+                'woocommerce-js',
+            ) );
+            return $classes;
+        }, 999 );
+    }
+}
+add_action( 'wp_enqueue_scripts', 'rlg_disable_plugins_on_static_home', 999 );
+
+/**
+ * Debug helper - Shows what scripts/styles are still loading
+ * Only visible to administrators
+ * Remove or comment out after optimization is complete
+ */
+function rlg_debug_enqueued_assets() {
+    if ( ! current_user_can( 'administrator' ) ) {
+        return;
+    }
+
+    if ( ! is_page_template( 'page-static-home-pure.php' ) && ! is_page_template( 'page-static-home.php' ) ) {
+        return;
+    }
+
+    global $wp_scripts, $wp_styles;
+
+    echo "\n<!-- ========== ENQUEUED STYLES ========== -->\n";
+    foreach ( $wp_styles->queue as $handle ) {
+        $src = isset( $wp_styles->registered[$handle]->src ) ? $wp_styles->registered[$handle]->src : 'N/A';
+        echo "<!-- Style: $handle | $src -->\n";
+    }
+
+    echo "\n<!-- ========== ENQUEUED SCRIPTS ========== -->\n";
+    foreach ( $wp_scripts->queue as $handle ) {
+        $src = isset( $wp_scripts->registered[$handle]->src ) ? $wp_scripts->registered[$handle]->src : 'N/A';
+        echo "<!-- Script: $handle | $src -->\n";
+    }
+    echo "<!-- ========== END DEBUG ========== -->\n\n";
+}
+add_action( 'wp_head', 'rlg_debug_enqueued_assets', 999 );
+add_action( 'wp_footer', 'rlg_debug_enqueued_assets', 999 );
+
+/**
+ * ============================================================================
+ * CUSTOM COOKIE CONSENT BANNER
+ * ============================================================================
+ * Lightweight custom cookie consent to replace CookieYes plugin
+ * No external CSS/JS files needed
+ */
+function rlg_custom_cookie_consent() {
+    // Get cookie policy page URL
+    $cookie_policy_url = home_url('/content-cookies-policy/');
+    ?>
+
+    <!-- Custom Cookie Consent Banner -->
+    <div id="rlg-cookie-consent" class="rlg-cookie-bar" style="display: none;">
+        <div class="rlg-cookie-container">
+            <div class="rlg-cookie-message">
+                We use cookies on our website to give you the most relevant experience by remembering your preferences and repeat visits. By clicking "Accept All", you consent to the use of ALL the cookies. However, you may visit "<a href="<?php echo esc_url($cookie_policy_url); ?>">Cookie Settings</a>" to provide a controlled consent.
+            </div>
+            <div class="rlg-cookie-buttons">
+                <button id="rlg-cookie-accept" class="rlg-cookie-btn rlg-cookie-accept">Accept All</button>
+                <button id="rlg-cookie-reject" class="rlg-cookie-btn rlg-cookie-reject">Reject All</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .rlg-cookie-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            color: #333333;
+            font-family: inherit;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 999999;
+            padding: 20px 0;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .rlg-cookie-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .rlg-cookie-message {
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.6;
+            min-width: 300px;
+        }
+
+        .rlg-cookie-message a {
+            color: #230000;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .rlg-cookie-message a:hover {
+            color: #000;
+        }
+
+        .rlg-cookie-buttons {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .rlg-cookie-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .rlg-cookie-accept {
+            background-color: #230000;
+            color: #ffffff;
+        }
+
+        .rlg-cookie-accept:hover {
+            background-color: #000000;
+        }
+
+        .rlg-cookie-reject {
+            background-color: #dedfe0;
+            color: #333333;
+        }
+
+        .rlg-cookie-reject:hover {
+            background-color: #c8c9ca;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .rlg-cookie-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .rlg-cookie-message {
+                min-width: 100%;
+                text-align: center;
+            }
+
+            .rlg-cookie-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .rlg-cookie-btn {
+                flex: 1;
+            }
+        }
+    </style>
+
+    <script>
+        (function() {
+            'use strict';
+
+            var cookieName = 'rlg_cookie_consent';
+            var cookieExpiry = 365; // days
+
+            // Check if cookie consent already given
+            function getCookie(name) {
+                var value = '; ' + document.cookie;
+                var parts = value.split('; ' + name + '=');
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+
+            // Set cookie
+            function setCookie(name, value, days) {
+                var expires = '';
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = '; expires=' + date.toUTCString();
+                }
+                document.cookie = name + '=' + value + expires + '; path=/';
+            }
+
+            // Hide banner with animation
+            function hideBanner() {
+                var banner = document.getElementById('rlg-cookie-consent');
+                if (banner) {
+                    banner.style.animation = 'slideDown 0.4s ease-out';
+                    setTimeout(function() {
+                        banner.style.display = 'none';
+                    }, 400);
+                }
+            }
+
+            // Show banner if no consent given
+            var consent = getCookie(cookieName);
+            if (!consent) {
+                var banner = document.getElementById('rlg-cookie-consent');
+                if (banner) {
+                    banner.style.display = 'block';
+                }
+            }
+
+            // Accept button
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.id === 'rlg-cookie-accept') {
+                    setCookie(cookieName, 'accepted', cookieExpiry);
+                    hideBanner();
+                    console.log('✅ Cookies accepted');
+                }
+            });
+
+            // Reject button
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.id === 'rlg-cookie-reject') {
+                    setCookie(cookieName, 'rejected', cookieExpiry);
+                    hideBanner();
+                    console.log('❌ Cookies rejected');
+                }
+            });
+
+            // Add slideDown animation
+            var style = document.createElement('style');
+            style.textContent = '@keyframes slideDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(100%); opacity: 0; } }';
+            document.head.appendChild(style);
+        })();
+    </script>
+
+    <?php
+}
+add_action('wp_footer', 'rlg_custom_cookie_consent', 999);
+
 add_action( 'wp_enqueue_scripts', 'basel_child_enqueue_styles', 1000 );
 
 function basel_child_enqueue_styles() {
@@ -40,10 +391,10 @@ function basel_child_enqueue_styles() {
 	if( basel_get_opt( 'minified_css' ) ) {
 		wp_enqueue_style( 'basel-style', get_template_directory_uri() . '/style.min.css', array('bootstrap'), $version );
 	} else {
-		wp_enqueue_style( 'basel-style', get_template_directory_uri() . '/style.css', array('bootstrap'), $version );
+		wp_enqueue_style( 'basel-style', get_template_directory_uri() . '/style.css', array('bootstrap'), '1.0.0.1' );
 	}
 
-    wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array('bootstrap'), $version );
+    wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array('bootstrap'), '1.0.0.1');
 
     // Enqueue custom mega menu styles
     wp_enqueue_style( 'rlg-mega-menu', get_stylesheet_directory_uri() . '/assets/css/mega-menu.css', array(), $version );
@@ -237,6 +588,29 @@ function rlg_custom_description_tab_content() {
     // Output the description (WooCommerce adds the wrapper automatically)
     echo wp_kses_post($description);
 }
+
+/**
+ * Remove unwanted text from blog post content
+ */
+function rlg_filter_blog_content($content) {
+    // Only filter on blog posts, not products or pages
+    if (is_singular('post') || is_home() || is_archive()) {
+        $content = str_replace("Thank you for reading this post, don't forget to subscribe!", '', $content);
+        $content = str_replace('Thank you for reading this post, don&#8217;t forget to subscribe!', '', $content);
+    }
+    return $content;
+}
+add_filter('the_content', 'rlg_filter_blog_content', 20);
+
+/**
+ * Remove unwanted text from blog post excerpts
+ */
+function rlg_filter_blog_excerpt($excerpt) {
+    $excerpt = str_replace("Thank you for reading this post, don't forget to subscribe!", '', $excerpt);
+    $excerpt = str_replace('Thank you for reading this post, don&#8217;t forget to subscribe!', '', $excerpt);
+    return $excerpt;
+}
+add_filter('the_excerpt', 'rlg_filter_blog_excerpt', 20);
 
 /**
  * ============================================================================
@@ -1273,18 +1647,23 @@ function rlg_display_size_chart_button() {
 
     ?>
     <div class="rlg-size-chart-button-wrapper">
-        <a href="<?php echo esc_url($size_chart_image_url); ?>"
-           class="rlg-size-chart-button glightbox"
-           data-gallery="size-chart"
-           data-glightbox="type: image; title: Size Chart; description: .rlg-size-chart-desc;">
+        <button type="button" class="rlg-size-chart-button" id="rlg-open-size-chart">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 2h12v12H2V2zm1 1v10h10V3H3zm1 1h8v1H4V4zm0 2h8v1H4V6zm0 2h8v1H4V8zm0 2h5v1H4v-1z"/>
             </svg>
             <span><?php _e('Size Chart', 'basel-child'); ?></span>
-        </a>
+        </button>
     </div>
-    <div class="rlg-size-chart-desc" style="display: none;">
-        <p>Click and drag to move the image. Use mouse wheel or pinch to zoom.</p>
+
+    <!-- Size Chart Modal -->
+    <div id="rlg-size-chart-modal" class="rlg-modal" style="display: none;">
+        <div class="rlg-modal-overlay"></div>
+        <div class="rlg-modal-content">
+            <button type="button" class="rlg-modal-close" aria-label="Close">&times;</button>
+            <div class="rlg-modal-body">
+                <img src="<?php echo esc_url($size_chart_image_url); ?>" alt="Size Chart" class="rlg-size-chart-image">
+            </div>
+        </div>
     </div>
     <?php
 }
@@ -1297,19 +1676,12 @@ function rlg_enqueue_size_chart_assets() {
         return;
     }
 
-    // Enqueue lazy-load lightbox script
-    wp_enqueue_script(
-        'rlg-lazy-load-lightbox',
-        get_stylesheet_directory_uri() . '/assets/js/lazy-load-lightbox.js',
-        array(),
-        '1.0.0',
-        true
-    );
-
-    // Inline CSS for size chart button only (lightbox CSS loads on interaction)
+    // Inline CSS for size chart button and modal
     wp_add_inline_style('child-style', '
         .rlg-size-chart-button-wrapper {
             margin: 15px 0;
+            position: relative;
+            z-index: 99999;
         }
 
         .rlg-size-chart-button {
@@ -1325,7 +1697,12 @@ function rlg_enqueue_size_chart_assets() {
             font-weight: 500;
             color: #333;
             text-decoration: none;
-            transition: none;
+            transition: all 0.3s ease;
+        }
+
+        .rlg-size-chart-button:hover {
+            background: #f5f5f5;
+            border-color: #999;
         }
 
         .rlg-size-chart-button svg {
@@ -1333,8 +1710,71 @@ function rlg_enqueue_size_chart_assets() {
             height: 16px;
         }
 
-        .rlg-size-chart-desc {
-            display: none;
+        /* Modal Styles */
+        .rlg-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rlg-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            cursor: pointer;
+        }
+
+        .rlg-modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .rlg-modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            font-size: 28px;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 2;
+            transition: background 0.3s ease;
+        }
+
+        .rlg-modal-close:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .rlg-modal-body {
+            padding: 20px;
+            overflow: auto;
+            max-height: 90vh;
+        }
+
+        .rlg-size-chart-image {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
         }
 
         @media (max-width: 768px) {
@@ -1342,7 +1782,54 @@ function rlg_enqueue_size_chart_assets() {
                 font-size: 13px;
                 padding: 8px 16px;
             }
+
+            .rlg-modal-content {
+                max-width: 95%;
+                max-height: 95%;
+            }
+
+            .rlg-modal-body {
+                padding: 10px;
+            }
+
+            .rlg-modal-close {
+                width: 35px;
+                height: 35px;
+                font-size: 24px;
+            }
         }
+    ');
+
+    // Inline JavaScript for modal functionality
+    wp_add_inline_script('jquery', '
+        jQuery(document).ready(function($) {
+            // Open modal
+            $("#rlg-open-size-chart").on("click", function(e) {
+                e.preventDefault();
+                $("#rlg-size-chart-modal").fadeIn(300);
+                $("body").css("overflow", "hidden");
+            });
+
+            // Close modal on close button click
+            $(".rlg-modal-close").on("click", function() {
+                $("#rlg-size-chart-modal").fadeOut(300);
+                $("body").css("overflow", "");
+            });
+
+            // Close modal on overlay click
+            $(".rlg-modal-overlay").on("click", function() {
+                $("#rlg-size-chart-modal").fadeOut(300);
+                $("body").css("overflow", "");
+            });
+
+            // Close modal on ESC key
+            $(document).on("keydown", function(e) {
+                if (e.key === "Escape" && $("#rlg-size-chart-modal").is(":visible")) {
+                    $("#rlg-size-chart-modal").fadeOut(300);
+                    $("body").css("overflow", "");
+                }
+            });
+        });
     ');
 }
 add_action('wp_enqueue_scripts', 'rlg_enqueue_size_chart_assets', 1001);

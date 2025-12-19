@@ -17,7 +17,7 @@ add_action('wp_head', function() {
     (function() {
         'use strict';
         window.fontsBlocked = true;
-        console.log('🚫 Font loading blocked by RLG');
+        console.log('ðŸš« Font loading blocked by RLG');
 
         // Prevent old font loader from running
         window.addEventListener('DOMContentLoaded', function() {
@@ -40,8 +40,8 @@ get_header();
     <section class="rlg-banner-section">
         <a href="https://staging.realleathergarments.co.uk/mens-brown-leather-military-vest/" class="rlg-banner-link">
             <picture>
-                <source media="(max-width: 768px)" srcset="https://staging.realleathergarments.co.uk/wp-content/uploads/2025/12/REAL-LEATHER-BANNER-MOBILE-SIZE-1-1.jpg">
-                <img src="https://staging.realleathergarments.co.uk/wp-content/uploads/2025/12/up2-1.jpg" alt="Real Leather Garments Banner" width="1600" height="400" loading="eager">
+                <source media="(max-width: 768px)" srcset="https://staging.realleathergarments.co.uk/wp-content/uploads/2025/12/mob-banner-home-11.webp" fetchpriority="high">
+                <img src="https://staging.realleathergarments.co.uk/wp-content/uploads/2025/12/rlg-desktop-banner.webp" alt="Real Leather Garments Banner" width="1600" height="400" loading="eager" fetchpriority="high">
             </picture>
         </a>
     </section>
