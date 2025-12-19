@@ -206,7 +206,7 @@ function rlg_custom_cookie_consent() {
             color: #333333;
             font-family: inherit;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 999999;
+            z-index: 99999;
             padding: 20px 0;
             animation: slideUp 0.4s ease-out;
         }
@@ -394,7 +394,7 @@ function basel_child_enqueue_styles() {
 		wp_enqueue_style( 'basel-style', get_template_directory_uri() . '/style.css', array('bootstrap'), '1.0.0.1' );
 	}
 
-    wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array('bootstrap'), '1.0.0.1');
+    wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array('bootstrap'), '2.0.0.1');
 
     // Enqueue custom mega menu styles
     wp_enqueue_style( 'rlg-mega-menu', get_stylesheet_directory_uri() . '/assets/css/mega-menu.css', array(), $version );
@@ -1700,10 +1700,7 @@ function rlg_enqueue_size_chart_assets() {
             transition: all 0.3s ease;
         }
 
-        .rlg-size-chart-button:hover {
-            background: #f5f5f5;
-            border-color: #999;
-        }
+        
 
         .rlg-size-chart-button svg {
             width: 16px;
@@ -1772,12 +1769,21 @@ function rlg_enqueue_size_chart_assets() {
 
         .rlg-size-chart-image {
             display: block;
-            max-width: 100%;
+            max-width: 600px !important;
             height: auto;
             margin: 0 auto;
+            
         }
 
         @media (max-width: 768px) {
+        
+        .rlg-size-chart-image {
+          
+            max-width: 100% !important;
+            
+            
+        }
+        
             .rlg-size-chart-button {
                 font-size: 13px;
                 padding: 8px 16px;
@@ -1833,5 +1839,37 @@ function rlg_enqueue_size_chart_assets() {
     ');
 }
 add_action('wp_enqueue_scripts', 'rlg_enqueue_size_chart_assets', 1001);
+
+/**
+ * ========================================
+ * DISABLE AUTO SCROLL ON VARIATION SELECT (MOBILE)
+ * ========================================
+ * Prevents page from scrolling to top when selecting product variations on mobile
+ */
+
+// Override Basel theme options to disable scroll on variation select
+add_filter('basel_global_options', 'rlg_disable_variation_scroll_options');
+function rlg_disable_variation_scroll_options($options) {
+    $options['swatches_scroll_top_mobile'] = false;
+    $options['swatches_scroll_top_desktop'] = false;
+    return $options;
+}
+
+// Enqueue script to ensure settings are disabled
+function rlg_disable_variation_scroll_mobile() {
+    if (!is_product()) {
+        return;
+    }
+
+    // Enqueue custom script to disable variation scroll
+    wp_enqueue_script(
+        'rlg-disable-variation-scroll',
+        get_stylesheet_directory_uri() . '/assets/js/disable-variation-scroll.js',
+        array('jquery'),
+        '1.0.1',
+        false // Load in header before Basel scripts
+    );
+}
+add_action('wp_enqueue_scripts', 'rlg_disable_variation_scroll_mobile', 5);
 
 

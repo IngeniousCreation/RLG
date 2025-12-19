@@ -48,6 +48,10 @@
   font-size: 24px;
 }
 
+.sticky-header.act-scroll{
+    z-index:9999999;
+}
+
 /* Mobile header margin fix */
 @media (max-width: 768px) {
   .main-header {
