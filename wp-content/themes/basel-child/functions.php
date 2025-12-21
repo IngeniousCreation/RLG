@@ -33,6 +33,115 @@ if (!function_exists('rlg_fix_google_listings_null_post')) {
 require_once get_stylesheet_directory() . '/inc/static-homepage-config.php';
 
 /**
+ * AJAX Load More Products Handler
+ */
+function rlg_load_more_products() {
+	try {
+		// Verify nonce for security
+		check_ajax_referer('rlg_load_more_nonce', 'nonce');
+
+		// Get parameters
+		$paged = isset($_POST['page']) ? intval($_POST['page']) : 1;
+		$category_id = isset($_POST['category']) ? intval($_POST['category']) : 0;
+		$min_price = isset($_POST['min_price']) ? floatval($_POST['min_price']) : 0;
+		$max_price = isset($_POST['max_price']) ? floatval($_POST['max_price']) : 999999999;
+		$stock_status = isset($_POST['stock_status']) ? sanitize_text_field($_POST['stock_status']) : '';
+		$orderby = isset($_POST['orderby']) ? sanitize_text_field($_POST['orderby']) : 'menu_order';
+
+		$posts_per_page = 20;
+		$offset = ($paged - 1) * $posts_per_page;
+
+		// Include custom query functions if not already loaded
+		if (!function_exists('rlg_get_products_custom_query')) {
+			require_once get_stylesheet_directory() . '/includes/custom-product-queries.php';
+		}
+
+		// Get products
+		$query_result = rlg_get_products_custom_query(array(
+			'category_id' => $category_id,
+			'min_price' => $min_price,
+			'max_price' => $max_price,
+			'stock_status' => $stock_status,
+			'orderby' => $orderby,
+			'posts_per_page' => $posts_per_page,
+			'offset' => $offset
+		));
+
+		$products = $query_result['products'];
+		$total_products = $query_result['total'];
+		$max_num_pages = ceil($total_products / $posts_per_page);
+
+	$html = '';
+
+	if (!empty($products)) {
+		foreach ($products as $product_obj) {
+			// Get WooCommerce product object
+			$product = wc_get_product($product_obj->ID);
+
+			if (!$product) {
+				continue;
+			}
+
+			$product_id = $product->get_id();
+			$product_title = $product->get_name();
+			$product_url = get_permalink($product_id);
+			$product_image = wp_get_attachment_image_url($product->get_image_id(), 'woocommerce_thumbnail') ?: wc_placeholder_img_src();
+			$product_price = $product->get_price_html();
+			$product_stock = $product->get_stock_status();
+			$product_sale = $product->is_on_sale();
+
+			$html .= '<div class="rlg-product-col">';
+			$html .= '<div class="rlg-product-item" data-product-id="' . esc_attr($product_id) . '">';
+
+			// Product Image
+			$html .= '<div class="rlg-product-image">';
+			$html .= '<a href="' . esc_url($product_url) . '">';
+			$html .= '<img src="' . esc_url($product_image) . '" alt="' . esc_attr($product_title) . '">';
+			$html .= '</a>';
+
+			// Badges
+			if ($product_sale) {
+				$html .= '<span class="rlg-badge rlg-badge-sale">Sale</span>';
+			}
+
+			if ($product_stock === 'outofstock') {
+				$html .= '<span class="rlg-badge rlg-badge-out-of-stock">Out of Stock</span>';
+			}
+
+			$html .= '</div>'; // .rlg-product-image
+
+			// Product Info
+			$html .= '<div class="rlg-product-info">';
+			$html .= '<h3 class="rlg-product-title">';
+			$html .= '<a href="' . esc_url($product_url) . '">' . esc_html($product_title) . '</a>';
+			$html .= '</h3>';
+			$html .= '<div class="rlg-product-price">';
+			$html .= $product_price;
+			$html .= '</div>';
+			$html .= '</div>'; // .rlg-product-info
+
+			$html .= '</div>'; // .rlg-product-item
+			$html .= '</div>'; // .rlg-product-col
+		}
+	}
+
+	wp_send_json_success(array(
+		'html' => $html,
+		'current_page' => $paged,
+		'max_pages' => $max_num_pages,
+		'has_more' => $paged < $max_num_pages
+	));
+
+	} catch (Exception $e) {
+		wp_send_json_error(array(
+			'message' => $e->getMessage()
+		));
+	}
+}
+add_action('wp_ajax_rlg_load_more_products', 'rlg_load_more_products');
+add_action('wp_ajax_nopriv_rlg_load_more_products', 'rlg_load_more_products');
+
+/**
  * ============================================================================
  * DISABLE PLUGIN JS/CSS ON STATIC HOMEPAGE
  * ============================================================================
@@ -401,6 +510,11 @@ function basel_child_enqueue_styles() {
 
     // Enqueue custom mega menu script
     wp_enqueue_script( 'rlg-mega-menu', get_stylesheet_directory_uri() . '/assets/js/mega-menu.js', array(), $version, true );
+
+    // Enqueue custom product grid styles on category pages
+    if ( is_tax( 'product_cat' ) ) {
+        wp_enqueue_style( 'rlg-product-grid', get_stylesheet_directory_uri() . '/assets/css/custom-product-grid.css', array(), $version );
+    }
 }
 
 /**
@@ -571,6 +685,21 @@ function rlg_enqueue_footer_css() {
     );
 }
 add_action('wp_enqueue_scripts', 'rlg_enqueue_footer_css', 999);
+
+/**
+ * Enqueue blog equal height CSS
+ */
+function rlg_enqueue_blog_equal_height_css() {
+    if ( is_home() || is_archive() || is_category() || is_tag() || is_author() ) {
+        wp_enqueue_style(
+            'rlg-blog-equal-height',
+            get_stylesheet_directory_uri() . '/assets/css/blog-equal-height.css',
+            array('basel-style'),
+            filemtime(get_stylesheet_directory() . '/assets/css/blog-equal-height.css')
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'rlg_enqueue_blog_equal_height_css', 9999);
 
 /**
  * Custom description tab content - shows long description with filtered content
@@ -859,7 +988,8 @@ Real Leather Garments";
 
 
 
-add_action('woocommerce_product_query', 'custom_modify_product_query');
+// DISABLED FOR TESTING - Using custom wpdb query instead
+// add_action('woocommerce_product_query', 'custom_modify_product_query');
 
 function custom_modify_product_query($query) {
     if (is_admin() || !is_tax('product_cat')) {
@@ -869,6 +999,79 @@ function custom_modify_product_query($query) {
     // Set the orderby parameter to 'rating' to order products by rating
     $query->set('orderby', 'rating');
     $query->set('order', 'DESC'); // Order products in descending order (highest rating first)
+}
+
+/**
+ * Custom product query using wpdb->prepare for performance testing
+ * This bypasses WooCommerce's query system and uses direct database queries
+ */
+add_action('pre_get_posts', 'rlg_custom_wpdb_product_query', 20);
+
+function rlg_custom_wpdb_product_query($query) {
+    // Only run on main query for product category pages
+    if (is_admin() || !$query->is_main_query() || !is_tax('product_cat')) {
+        return;
+    }
+
+    global $wpdb;
+
+    // Get current category
+    $term = get_queried_object();
+    if (!$term || !isset($term->term_id)) {
+        return;
+    }
+
+    $category_id = $term->term_id;
+    $posts_per_page = $query->get('posts_per_page') ?: 50;
+    $paged = $query->get('paged') ?: 1;
+    $offset = ($paged - 1) * $posts_per_page;
+
+    // Custom SQL query using wpdb->prepare for better performance
+    // This query gets products from a category ordered by rating (average of comment ratings)
+    $sql = $wpdb->prepare("
+        SELECT DISTINCT p.ID, p.post_title, p.post_name, p.post_date,
+               COALESCE(AVG(cm.meta_value), 0) as average_rating
+        FROM {$wpdb->posts} p
+        INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
+        INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+        LEFT JOIN {$wpdb->comments} c ON p.ID = c.comment_post_ID AND c.comment_approved = '1'
+        LEFT JOIN {$wpdb->commentmeta} cm ON c.comment_ID = cm.comment_id AND cm.meta_key = 'rating'
+        WHERE p.post_type = 'product'
+          AND p.post_status = 'publish'
+          AND tt.taxonomy = 'product_cat'
+          AND tt.term_id = %d
+        GROUP BY p.ID
+        ORDER BY average_rating DESC, p.post_date DESC
+        LIMIT %d OFFSET %d
+    ", $category_id, $posts_per_page, $offset);
+
+    // Execute query
+    $product_ids = $wpdb->get_col($sql);
+
+    // If we have results, modify the query to use these specific post IDs
+    if (!empty($product_ids)) {
+        $query->set('post__in', $product_ids);
+        $query->set('orderby', 'post__in'); // Maintain the order from our custom query
+        $query->set('posts_per_page', $posts_per_page);
+    }
+
+    // Get total count for pagination
+    $count_sql = $wpdb->prepare("
+        SELECT COUNT(DISTINCT p.ID)
+        FROM {$wpdb->posts} p
+        INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
+        INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+        WHERE p.post_type = 'product'
+          AND p.post_status = 'publish'
+          AND tt.taxonomy = 'product_cat'
+          AND tt.term_id = %d
+    ", $category_id);
+
+    $total_products = $wpdb->get_var($count_sql);
+
+    // Set found posts for pagination
+    $query->found_posts = $total_products;
+    $query->max_num_pages = ceil($total_products / $posts_per_page);
 }
 
 
@@ -1871,5 +2074,224 @@ function rlg_disable_variation_scroll_mobile() {
     );
 }
 add_action('wp_enqueue_scripts', 'rlg_disable_variation_scroll_mobile', 5);
+
+
+/**
+ * ========================================
+ * CUSTOM SIDEBAR FILTERS
+ * ========================================
+ * Price Range, Availability, and Categories filters
+ */
+
+// Include custom sidebar filters
+$custom_sidebar_filters_path = get_stylesheet_directory() . '/includes/custom-sidebar-filters.php';
+if ( file_exists( $custom_sidebar_filters_path ) ) {
+    require_once $custom_sidebar_filters_path;
+}
+
+// Enqueue sidebar filters CSS and JS
+function rlg_enqueue_sidebar_filters_assets() {
+    if ( is_product_category() || is_shop() ) {
+        // Enqueue CSS with file modification time for cache busting
+        wp_enqueue_style(
+            'rlg-sidebar-filters',
+            get_stylesheet_directory_uri() . '/assets/css/sidebar-filters.css',
+            array(),
+            filemtime(get_stylesheet_directory() . '/assets/css/sidebar-filters.css')
+        );
+
+        // Enqueue custom AJAX filters JS - MUST load AFTER basel-functions to override their handlers
+        wp_enqueue_script(
+            'rlg-custom-ajax-filters',
+            get_stylesheet_directory_uri() . '/assets/js/custom-ajax-filters.js',
+            array('jquery', 'basel-functions'), // Depend on basel-functions
+            filemtime(get_stylesheet_directory() . '/assets/js/custom-ajax-filters.js'),
+            true
+        );
+
+        // Enqueue loading indicator JS with file modification time for cache busting
+        wp_enqueue_script(
+            'rlg-filter-skeleton-loader',
+            get_stylesheet_directory_uri() . '/assets/js/filter-skeleton-loader.js',
+            array('jquery', 'rlg-custom-ajax-filters'),
+            filemtime(get_stylesheet_directory() . '/assets/js/filter-skeleton-loader.js'),
+            true
+        );
+
+        // Enqueue load more products JS
+        wp_enqueue_script(
+            'rlg-load-more-products',
+            get_stylesheet_directory_uri() . '/assets/js/load-more-products.js',
+            array('jquery'),
+            filemtime(get_stylesheet_directory() . '/assets/js/load-more-products.js'),
+            true
+        );
+
+        // Localize script with AJAX URL and nonce
+        wp_localize_script('rlg-load-more-products', 'rlgLoadMore', array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('rlg_load_more_nonce')
+        ));
+
+        // Enqueue mobile filters JS
+        wp_enqueue_script(
+            'rlg-mobile-filters',
+            get_stylesheet_directory_uri() . '/assets/js/mobile-filters.js',
+            array('jquery'),
+            filemtime(get_stylesheet_directory() . '/assets/js/mobile-filters.js'),
+            true
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'rlg_enqueue_sidebar_filters_assets', 10001); // Load after Basel (priority 10000)
+
+// Filter products by stock status
+function rlg_filter_products_by_stock_status( $query ) {
+    if ( ! is_admin() && $query->is_main_query() && ( is_product_category() || is_shop() ) ) {
+        if ( isset( $_GET['stock_status'] ) && ! empty( $_GET['stock_status'] ) ) {
+            $stock_status = sanitize_text_field( $_GET['stock_status'] );
+
+            $meta_query = $query->get( 'meta_query' );
+            if ( ! is_array( $meta_query ) ) {
+                $meta_query = array();
+            }
+
+            $meta_query[] = array(
+                'key'     => '_stock_status',
+                'value'   => $stock_status,
+                'compare' => '='
+            );
+
+            $query->set( 'meta_query', $meta_query );
+        }
+    }
+}
+add_action( 'pre_get_posts', 'rlg_filter_products_by_stock_status' );
+
+// Add filters to sidebar using hook
+function rlg_add_filters_to_sidebar() {
+    if ( is_product_category() || is_shop() ) {
+        if ( function_exists('rlg_render_custom_sidebar_filters') ) {
+            rlg_render_custom_sidebar_filters();
+        }
+    }
+}
+add_action( 'basel_before_sidebar_area', 'rlg_add_filters_to_sidebar', 5 );
+
+// Force sidebar layout on shop/category pages
+function rlg_force_sidebar_on_shop( $layout ) {
+    if ( is_product_category() || is_shop() ) {
+        return 'sidebar-right'; // or 'sidebar-left' if you prefer left sidebar
+    }
+    return $layout;
+}
+add_filter( 'basel_page_layout', 'rlg_force_sidebar_on_shop', 100 );
+
+// Force sidebar to show even without widgets
+function rlg_force_sidebar_active( $is_active, $sidebar_id ) {
+    if ( ( is_product_category() || is_shop() ) && $sidebar_id === 'sidebar-shop' ) {
+        return true; // Force sidebar to be considered "active"
+    }
+    return $is_active;
+}
+add_filter( 'is_active_sidebar', 'rlg_force_sidebar_active', 10, 2 );
+
+
+/**
+ * ================================================================================================
+ * IMAGE CDN CONFIGURATION - Use staging server for images instead of localhost
+ * ================================================================================================
+ */
+
+/**
+ * Replace localhost URLs with staging CDN URL for images
+ * This allows local development to use images from staging server
+ */
+function rlg_replace_image_url_with_cdn( $url ) {
+    // Only run if CDN is enabled
+    if ( ! defined( 'RLG_IMAGE_CDN_ENABLED' ) || ! RLG_IMAGE_CDN_ENABLED ) {
+        return $url;
+    }
+
+    // Only replace if it's a localhost URL
+    if ( defined( 'RLG_LOCAL_URL' ) && defined( 'RLG_IMAGE_CDN_URL' ) ) {
+        $url = str_replace( RLG_LOCAL_URL, RLG_IMAGE_CDN_URL, $url );
+    }
+
+    return $url;
+}
+
+// Apply to all image-related filters
+add_filter( 'wp_get_attachment_url', 'rlg_replace_image_url_with_cdn', 10, 1 );
+add_filter( 'wp_get_attachment_image_src', 'rlg_replace_image_url_with_cdn_array', 10, 1 );
+add_filter( 'wp_calculate_image_srcset', 'rlg_replace_srcset_with_cdn', 10, 1 );
+
+/**
+ * Replace localhost URLs in image src arrays
+ */
+function rlg_replace_image_url_with_cdn_array( $image ) {
+    if ( ! defined( 'RLG_IMAGE_CDN_ENABLED' ) || ! RLG_IMAGE_CDN_ENABLED ) {
+        return $image;
+    }
+
+    if ( is_array( $image ) && isset( $image[0] ) ) {
+        $image[0] = rlg_replace_image_url_with_cdn( $image[0] );
+    }
+
+    return $image;
+}
+
+/**
+ * Replace localhost URLs in srcset attributes
+ */
+function rlg_replace_srcset_with_cdn( $sources ) {
+    if ( ! defined( 'RLG_IMAGE_CDN_ENABLED' ) || ! RLG_IMAGE_CDN_ENABLED ) {
+        return $sources;
+    }
+
+    if ( is_array( $sources ) ) {
+        foreach ( $sources as $width => $source ) {
+            if ( isset( $source['url'] ) ) {
+                $sources[$width]['url'] = rlg_replace_image_url_with_cdn( $source['url'] );
+            }
+        }
+    }
+
+    return $sources;
+}
+
+/**
+ * Replace localhost URLs in content (for images in post content)
+ */
+function rlg_replace_content_images_with_cdn( $content ) {
+    if ( ! defined( 'RLG_IMAGE_CDN_ENABLED' ) || ! RLG_IMAGE_CDN_ENABLED ) {
+        return $content;
+    }
+
+    if ( defined( 'RLG_LOCAL_URL' ) && defined( 'RLG_IMAGE_CDN_URL' ) ) {
+        $content = str_replace( RLG_LOCAL_URL, RLG_IMAGE_CDN_URL, $content );
+    }
+
+    return $content;
+}
+add_filter( 'the_content', 'rlg_replace_content_images_with_cdn', 10, 1 );
+add_filter( 'post_thumbnail_html', 'rlg_replace_content_images_with_cdn', 10, 1 );
+
+/**
+ * Replace localhost URLs in WooCommerce product images
+ */
+function rlg_replace_woocommerce_images_with_cdn( $html ) {
+    if ( ! defined( 'RLG_IMAGE_CDN_ENABLED' ) || ! RLG_IMAGE_CDN_ENABLED ) {
+        return $html;
+    }
+
+    if ( defined( 'RLG_LOCAL_URL' ) && defined( 'RLG_IMAGE_CDN_URL' ) ) {
+        $html = str_replace( RLG_LOCAL_URL, RLG_IMAGE_CDN_URL, $html );
+    }
+
+    return $html;
+}
+add_filter( 'woocommerce_single_product_image_thumbnail_html', 'rlg_replace_woocommerce_images_with_cdn', 10, 1 );
+add_filter( 'basel_attachment', 'rlg_replace_woocommerce_images_with_cdn', 10, 1 );
 
 

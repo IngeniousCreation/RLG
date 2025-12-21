@@ -18,7 +18,10 @@ if ( basel_get_opt( 'shop_hide_sidebar_tablet' ) || basel_get_opt( 'shop_hide_si
 	basel_enqueue_inline_style( 'opt-off-canvas-sidebar' );
 }
 
-if ( is_active_sidebar( $sidebar_name ) ) : ?>
+// Show sidebar if widgets are active OR if it's shop/category page (for custom filters)
+$show_sidebar = is_active_sidebar( $sidebar_name ) || ( ( is_product_category() || is_shop() ) && $sidebar_name === 'sidebar-shop' );
+
+if ( $show_sidebar ) : ?>
 	<aside class="sidebar-container <?php echo esc_attr( $sidebar_class ); ?> area-<?php echo esc_attr( $sidebar_name ); ?>">
 		<div class="basel-close-sidebar-btn"><span><?php esc_html_e( 'Close', 'basel' ); ?></span></div>
 		<div class="sidebar-inner basel-scroll">

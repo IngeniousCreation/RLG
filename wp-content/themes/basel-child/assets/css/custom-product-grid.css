@@ -1,0 +1,197 @@
+/**
+ * Custom Product Grid Styles
+ * 
+ * @package Basel Child
+ * @version 1.0.0
+ */
+
+/* ============================================================================
+   Product Grid Container
+   ========================================================================== */
+
+.rlg-products-grid {
+    width: 100%;
+    margin: 0 0 40px 0;
+}
+
+.rlg-products-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================================================
+   Product Item
+   ========================================================================== */
+
+.rlg-product-item {
+    position: relative;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.rlg-product-item:hover {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.rlg-product-inner {
+    position: relative;
+    padding: 0;
+}
+
+/* ============================================================================
+   Product Image
+   ========================================================================== */
+
+.rlg-product-image {
+    position: relative;
+    width: 100%;
+    padding-bottom: 125%; /* 4:5 aspect ratio */
+    overflow: hidden;
+    background: #f8f8f8;
+}
+
+.rlg-product-image a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rlg-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.rlg-product-item:hover .rlg-product-image img {
+    transform: scale(1.05);
+}
+
+/* ============================================================================
+   Product Badges
+   ========================================================================== */
+
+.rlg-sale-badge,
+.rlg-stock-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 3px;
+    z-index: 2;
+}
+
+.rlg-sale-badge {
+    background: #715242;
+    color: #fff;
+}
+
+.rlg-stock-badge.out-of-stock {
+    background: #95a5a6;
+    color: #fff;
+    top: 50px;
+}
+
+/* ============================================================================
+   Product Info
+   ========================================================================== */
+
+.rlg-product-info {
+    padding: 20px 15px;
+    text-align: center;
+}
+
+.rlg-product-title {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    min-height: 44px;
+}
+
+.rlg-product-title a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.rlg-product-title a:hover {
+    color: #000;
+}
+
+.rlg-product-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+}
+
+.rlg-product-price del {
+    color: #999;
+    font-weight: 400;
+    margin-right: 8px;
+}
+
+.rlg-product-price ins {
+    text-decoration: none;
+    color: #e74c3c;
+}
+
+/* ============================================================================
+   Responsive Design
+   ========================================================================== */
+
+/* Tablet - 3 columns */
+@media (max-width: 1024px) {
+    .rlg-products-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+}
+
+/* Mobile Landscape - 2 columns */
+@media (max-width: 768px) {
+    .rlg-products-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .rlg-product-title {
+        font-size: 14px;
+        min-height: 40px;
+    }
+    
+    .rlg-product-price {
+        font-size: 16px;
+    }
+    
+    .rlg-product-info {
+        padding: 15px 10px;
+    }
+}
+
+/* Mobile Portrait - 1 column */
+@media (max-width: 480px) {
+    .rlg-products-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .rlg-product-image {
+        padding-bottom: 100%; /* Square aspect ratio on mobile */
+    }
+}
+

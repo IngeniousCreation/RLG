@@ -391,11 +391,7 @@ function basel_shortcodes_custom_css() {
     }
     .basel-products-custom .product-item {
         background: #fff;
-        border: 1px solid #e5e5e5;
         transition: all 0.3s ease;
-    }
-    .basel-products-custom .product-item:hover {
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     .basel-products-custom .product-wrapper {
         padding: 15px;

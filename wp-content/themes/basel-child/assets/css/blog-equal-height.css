@@ -1,0 +1,66 @@
+/**
+ * Blog Equal Height Fix
+ * Converts masonry layout to CSS Grid with equal height cards
+ *
+ * @package Basel Child
+ * @since 1.0.0
+ */
+
+/* Force equal height blog cards */
+.blog .masonry-container {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 30px !important;
+    height: auto !important;
+    position: static !important;
+}
+
+.blog .masonry-container article.blog-post-loop {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.blog .masonry-container article.blog-post-loop .entry-header {
+    flex-shrink: 0 !important;
+}
+
+.blog .masonry-container article.blog-post-loop .entry-content {
+    flex-grow: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.blog .masonry-container article.blog-post-loop .liner-continer {
+    margin-top: auto !important;
+}
+
+/* Tablet - 2 columns */
+@media (max-width: 991px) {
+    .blog .masonry-container {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 20px !important;
+    }
+}
+
+/* Mobile - 1 column */
+@media (max-width: 576px) {
+    .blog .masonry-container {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+}
+
+/* Blog post images - equal height */
+.blog-post-loop .post-img-wrapp>a img {
+    width: 100%;
+    max-width: 100%;
+    height: 270px;
+    object-fit: contain;
+}
+
