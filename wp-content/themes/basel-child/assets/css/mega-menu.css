@@ -190,7 +190,7 @@
 }
 
 .rlg-mobile-menu-toggle[aria-expanded="true"] .rlg-toggle-bar:nth-child(3) {
-	transform: rotate(-45deg) translateY(-6px);
+	transform: rotate(-45deg) translateY(-9px);
 }
 
 .rlg-mobile-menu-overlay {
@@ -298,6 +298,7 @@
 		display: flex !important;
 		margin: 0;
 		margin-left: 5px;
+		background: transparent !important;
 	}
 
 	/* Force navigation-wrap to be visible for desktop menu */
@@ -341,6 +342,7 @@
 
 	.rlg-mega-menu.active {
 		left: 0;
+		z-index: 9999999999;
 	}
 
 	/* Mobile search box styles */

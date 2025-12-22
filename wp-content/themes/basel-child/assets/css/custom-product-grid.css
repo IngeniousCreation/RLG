@@ -70,7 +70,7 @@
 .rlg-product-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.3s ease;
 }
 
@@ -183,15 +183,28 @@
     }
 }
 
-/* Mobile Portrait - 1 column */
+/* Mobile Portrait - 2 columns */
 @media (max-width: 480px) {
     .rlg-products-row {
-        grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
-    
+
     .rlg-product-image {
-        padding-bottom: 100%; /* Square aspect ratio on mobile */
+        padding-bottom: 125%; /* Maintain aspect ratio on mobile */
+    }
+
+    .rlg-product-title {
+        font-size: 13px;
+        min-height: 36px;
+    }
+
+    .rlg-product-price {
+        font-size: 14px;
+    }
+
+    .rlg-product-info {
+        padding: 10px 5px;
     }
 }
 

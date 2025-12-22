@@ -297,7 +297,25 @@ function rlg_handle_custom_jacket_form() {
         'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>',
         'Reply-To: ' . $email
     );
-    
+
+    // Save to database
+    $submission_data = array(
+        'product_id' => $product_id,
+        'product_name' => $product_title,
+        'customer_name' => $name,
+        'customer_email' => $email,
+        'customer_phone' => $phone,
+        'chest' => $chest,
+        'waist' => $waist,
+        'shoulder' => $shoulder,
+        'sleeve' => $sleeve,
+        'jacket_length' => $jacket_length,
+        'additional_notes' => $additional_notes,
+        'attachment_url' => $attachment_url,
+    );
+
+    $submission_id = rlg_save_form_submission('customize_jacket', $submission_data);
+
     // Send email
     $sent = wp_mail($to, $subject, $email_body, $headers);
 

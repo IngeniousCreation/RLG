@@ -259,7 +259,7 @@ function basel_shortcode_products_lite($atts) {
                     dots: false,
                     navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
                     responsive: {
-                        0: { items: 1 },
+                        0: { items: 2 },
                         480: { items: 2 },
                         768: { items: 3 },
                         992: { items: <?php echo intval($atts['slides_per_view']); ?> }

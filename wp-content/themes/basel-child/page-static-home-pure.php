@@ -38,10 +38,10 @@ get_header();
 <div class="main-page-wrapper">
     <!-- Banner Section - Full Width -->
     <section class="rlg-banner-section">
-        <a href="https://staging.realleathergarments.co.uk/mens-brown-leather-military-vest/" class="rlg-banner-link">
+        <a href="https://realleathergarments.co.uk/mens-brown-leather-military-vest/" class="rlg-banner-link">
             <picture>
-                <source media="(max-width: 768px)" srcset="https://staging.realleathergarments.co.uk/wp-content/uploads/2025/12/mob-banner-home-11.webp" fetchpriority="high">
-                <img src="https://staging.realleathergarments.co.uk/wp-content/uploads/2025/12/rlg-desktop-banner.webp" alt="Real Leather Garments Banner" width="1600" height="400" loading="eager" fetchpriority="high">
+                <source media="(max-width: 768px)" srcset="https://realleathergarments.co.uk/wp-content/uploads/2025/12/mob-banner-home-11.webp" fetchpriority="high">
+                <img src="https://realleathergarments.co.uk/wp-content/uploads/2025/12/rlg-desktop-banner.webp" alt="Real Leather Garments Banner" width="1600" height="400" loading="eager" fetchpriority="high">
             </picture>
         </a>
     </section>
@@ -65,32 +65,32 @@ if (file_exists($sections_file)) {
                     <div class="rlg-content-text">
                         <p>Access all the latest trends with our real leather jackets that have a classic and timeless appeal and come in different styles. From leather to sheepskin fur, our jackets are made with premium quality fabric and are available at the best affordable prices.</p>
 
-                        <p>Our <a href="https://staging.realleathergarments.co.uk/bomber-jackets/"><strong>Bomber Leather Jackets</strong></a> are made with the highest quality genuine leather and weather-resistant material. We take pride in presenting a collection that also sets the bar high when it comes to design and patterns.</p>
+                        <p>Our <a href="https://realleathergarments.co.uk/bomber-jackets/"><strong>Bomber Leather Jackets</strong></a> are made with the highest quality genuine leather and weather-resistant material. We take pride in presenting a collection that also sets the bar high when it comes to design and patterns.</p>
 
-                        <p>Also in terms of quality and craftsmanship of our <a href="https://staging.realleathergarments.co.uk/women-leather-jackets/"><strong>Real Leather Jacket Women</strong></a> we use the finest quality leather that ensures the best fits, durability, and unique trendy designs.</p>
+                        <p>Also in terms of quality and craftsmanship of our <a href="https://realleathergarments.co.uk/women-leather-jackets/"><strong>Real Leather Jacket Women</strong></a> we use the finest quality leather that ensures the best fits, durability, and unique trendy designs.</p>
 
                         <p><a id="load-more-content" class="wpex-toggle-element-trigger" href="#show-more-text">Read More</a></p>
 
                         <div id="show-more-text" class="wpex-toggle-element" style="display: none;">
                             <h2 class="content-headings-one">A Guide to Classic Mens Fashion</h2>
-                            <p><a href="https://staging.realleathergarments.co.uk/mens-gilets-waistcoats/"><strong>Mens leather gilet</strong></a> serves as a great choice to transform your entire personality. It has its charm that never goes out of trend. The sleeveless design is a unique feature of this attire that allows you to keep comfortable while staying on-trend.</p>
+                            <p><a href="https://realleathergarments.co.uk/mens-gilets-waistcoats/"><strong>Mens leather gilet</strong></a> serves as a great choice to transform your entire personality. It has its charm that never goes out of trend. The sleeveless design is a unique feature of this attire that allows you to keep comfortable while staying on-trend.</p>
 
                             <p>You can layer it under a heavy coat or put it on over a casual t-shirt, It has a distinctive style that compliments your personality well.</p>
 
-                            <p>A blend of vintage and modern styles, our <a href="https://staging.realleathergarments.co.uk/gascoigne-mens-sheepskin-leather-gilet/"><strong>mens sheepskin gilets</strong></a> are designed to give you maximum warmth with a chic appearance. It features a vibe of boldness and adventure that makes it a trendsetting piece in the world of fashion.</p>
+                            <p>A blend of vintage and modern styles, our <a href="https://realleathergarments.co.uk/gascoigne-mens-sheepskin-leather-gilet/"><strong>mens sheepskin gilets</strong></a> are designed to give you maximum warmth with a chic appearance. It features a vibe of boldness and adventure that makes it a trendsetting piece in the world of fashion.</p>
 
-                            <p>Sheepskin coats are among the best choices for winter as well as for the late fall season. The popularity of <a href="https://staging.realleathergarments.co.uk/sheepskin-coats-for-men/"><strong>mens sheepskin coats</strong></a> continues to rise in the world of men's fashion. Our men's coats fabricated from lambskin or sheepskin are a great investment for your winter wardrobe. The furry collars and front button closures ensure enough warmth against the cold and contribute to your standout presence.</p>
+                            <p>Sheepskin coats are among the best choices for winter as well as for the late fall season. The popularity of <a href="https://realleathergarments.co.uk/sheepskin-coats-for-men/"><strong>mens sheepskin coats</strong></a> continues to rise in the world of men's fashion. Our men's coats fabricated from lambskin or sheepskin are a great investment for your winter wardrobe. The furry collars and front button closures ensure enough warmth against the cold and contribute to your standout presence.</p>
 
-                            <p>When you think about the classic design and durability, one thing that comes to mind is <a href="https://staging.realleathergarments.co.uk/shearling-jackets/"><strong>men's shearling jackets</strong></a>. We offer a wide range of shearling jackets that goes for both casual and formal look.</p>
+                            <p>When you think about the classic design and durability, one thing that comes to mind is <a href="https://realleathergarments.co.uk/shearling-jackets/"><strong>men's shearling jackets</strong></a>. We offer a wide range of shearling jackets that goes for both casual and formal look.</p>
 
-                            <p>To upgrade your winter wardrobe, explore our wide collection of <a href="https://staging.realleathergarments.co.uk/movies-leather-jackets/"><strong>movie jackets</strong></a> that feature an extensive variety of high-quality shearling men's Real Leather Jackets, a perfect combination of warmth, style, and durability.</p>
+                            <p>To upgrade your winter wardrobe, explore our wide collection of <a href="https://realleathergarments.co.uk/movies-leather-jackets/"><strong>movie jackets</strong></a> that feature an extensive variety of high-quality shearling men's Real Leather Jackets, a perfect combination of warmth, style, and durability.</p>
 
-                            <p>Such as fans' favorite <a href="https://staging.realleathergarments.co.uk/brooklyn-nine-nine-peralta-leather-jacket/"><strong>Brooklyn 99 jacket</strong></a>, which had ruled the hearts of people also available to glam up your personality.</p>
+                            <p>Such as fans' favorite <a href="https://realleathergarments.co.uk/brooklyn-nine-nine-peralta-leather-jacket/"><strong>Brooklyn 99 jacket</strong></a>, which had ruled the hearts of people also available to glam up your personality.</p>
 
                             <h2 class="content-headings-two">Diversity in Women's Fashion</h2>
-                            <p>Choosing a style that makes you confident about your appearance and serves as a symbol of rebellion and empowerment is only possible with a bomber <a href="https://staging.realleathergarments.co.uk/leather-biker-jackets-for-women/"><strong>womens moto jacket</strong></a>. Real Leather versions are ideal for fall and winter and keep you warm and stylish with their aesthetic appeal i.e. zippers, studs, and multiple pockets.</p>
+                            <p>Choosing a style that makes you confident about your appearance and serves as a symbol of rebellion and empowerment is only possible with a bomber <a href="https://realleathergarments.co.uk/leather-biker-jackets-for-women/"><strong>womens moto jacket</strong></a>. Real Leather versions are ideal for fall and winter and keep you warm and stylish with their aesthetic appeal i.e. zippers, studs, and multiple pockets.</p>
 
-                            <p>A stylish and luxurious outerwear piece, <a href="https://staging.realleathergarments.co.uk/leather-sheepskin-coat-for-womens/"><strong>womens sheepskin coat</strong></a> embodies a perfect blend of warmth comfort, and timeless grace. If you want to look stylish while enjoying winter cold nights and chill mornings, a sheepskin coat is a must-have for your winter wardrobe.</p>
+                            <p>A stylish and luxurious outerwear piece, <a href="https://realleathergarments.co.uk/leather-sheepskin-coat-for-womens/"><strong>womens sheepskin coat</strong></a> embodies a perfect blend of warmth comfort, and timeless grace. If you want to look stylish while enjoying winter cold nights and chill mornings, a sheepskin coat is a must-have for your winter wardrobe.</p>
 
                             <p>Experience the warmth and comfort of <strong>real leather jacket men</strong> and <strong>real leather jacket women</strong>, that can be carried out anywhere with style and elegance.</p>
                         </div>
@@ -223,7 +223,7 @@ if (file_exists($sections_file)) {
 .basel-products-custom .product-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     transition: transform 0.3s;
 }
@@ -350,7 +350,7 @@ jQuery(document).ready(function($) {
             navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
             responsive: {
                 0: {
-                    items: 1,
+                    items: 2,
                     margin: 10
                 },
                 480: {

@@ -33,6 +33,16 @@ if (!function_exists('rlg_fix_google_listings_null_post')) {
 require_once get_stylesheet_directory() . '/inc/static-homepage-config.php';
 
 /**
+ * Include form submissions database handler
+ */
+require_once get_stylesheet_directory() . '/includes/form-submissions-db.php';
+
+/**
+ * Include form submissions admin page
+ */
+require_once get_stylesheet_directory() . '/includes/form-submissions-admin.php';
+
+/**
  * AJAX Load More Products Handler
  */
 function rlg_load_more_products() {
@@ -700,6 +710,207 @@ function rlg_enqueue_blog_equal_height_css() {
     }
 }
 add_action('wp_enqueue_scripts', 'rlg_enqueue_blog_equal_height_css', 9999);
+
+/**
+ * Enqueue page header CSS for all pages
+ */
+function rlg_enqueue_page_header_css() {
+    if ( is_page() && !is_page_template('template-contact.php') && !is_page_template('page-static-home.php') && !is_page_template('page-static-home-pure.php') ) {
+        wp_enqueue_style(
+            'rlg-page-header',
+            get_stylesheet_directory_uri() . '/assets/css/page-header.css',
+            array('basel-style'),
+            filemtime(get_stylesheet_directory() . '/assets/css/page-header.css')
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'rlg_enqueue_page_header_css');
+
+/**
+ * Enqueue contact page CSS and JS
+ */
+function rlg_enqueue_contact_page_assets() {
+    if ( is_page_template('template-contact.php') ) {
+        // Enqueue CSS
+        wp_enqueue_style(
+            'rlg-contact-page',
+            get_stylesheet_directory_uri() . '/assets/css/contact-page.css',
+            array('basel-style'),
+            filemtime(get_stylesheet_directory() . '/assets/css/contact-page.css')
+        );
+
+        // Enqueue JS
+        wp_enqueue_script(
+            'rlg-contact-form',
+            get_stylesheet_directory_uri() . '/assets/js/contact-form.js',
+            array('jquery'),
+            filemtime(get_stylesheet_directory() . '/assets/js/contact-form.js'),
+            true
+        );
+
+        // Localize script for AJAX
+        wp_localize_script('rlg-contact-form', 'ajax_object', array(
+            'ajax_url' => admin_url('admin-ajax.php')
+        ));
+    }
+}
+add_action('wp_enqueue_scripts', 'rlg_enqueue_contact_page_assets');
+
+/**
+ * Handle contact form submission via AJAX
+ */
+function rlg_contact_form_submit() {
+    // Verify nonce
+    if ( ! isset($_POST['rlg_contact_nonce']) || ! wp_verify_nonce($_POST['rlg_contact_nonce'], 'rlg_contact_form') ) {
+        wp_send_json_error(array('message' => 'Security check failed. Please refresh the page and try again.'));
+        return;
+    }
+
+    // Rate limiting - prevent spam submissions
+    $user_ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    $rate_limit_key = 'rlg_contact_form_' . md5($user_ip);
+    $submission_count = get_transient($rate_limit_key);
+
+    if ($submission_count && $submission_count >= 3) {
+        wp_send_json_error(array('message' => 'Too many submissions. Please wait 10 minutes before trying again.'));
+        return;
+    }
+
+    // Time-based check (form must be filled for at least 2 seconds)
+    $form_load_time = intval($_POST['form_load_time'] ?? 0);
+    if ($form_load_time > 0 && (time() - $form_load_time) < 2) {
+        wp_send_json_error(array('message' => 'Form submitted too quickly. Please try again.'));
+        return;
+    }
+
+    // Sanitize input
+    $first_name = sanitize_text_field($_POST['contact_name'] ?? '');
+    $last_name = sanitize_text_field($_POST['contact_lname'] ?? '');
+    $email = sanitize_email($_POST['contact_email'] ?? '');
+    $phone = sanitize_text_field($_POST['contact_phone'] ?? '');
+    $message = sanitize_textarea_field($_POST['contact_message'] ?? '');
+
+    // Combine first and last name
+    $full_name = trim($first_name . ' ' . $last_name);
+
+    // Validation errors array
+    $errors = array();
+
+    // Validate first name
+    if (empty($first_name)) {
+        $errors[] = 'First name is required.';
+    } elseif (strlen($first_name) < 2) {
+        $errors[] = 'First name must be at least 2 characters.';
+    } elseif (strlen($first_name) > 50) {
+        $errors[] = 'First name is too long (max 50 characters).';
+    } elseif (!preg_match('/^[a-zA-Z\s\-\.]+$/', $first_name)) {
+        $errors[] = 'First name contains invalid characters.';
+    }
+
+    // Validate last name
+    if (empty($last_name)) {
+        $errors[] = 'Last name is required.';
+    } elseif (strlen($last_name) < 2) {
+        $errors[] = 'Last name must be at least 2 characters.';
+    } elseif (strlen($last_name) > 50) {
+        $errors[] = 'Last name is too long (max 50 characters).';
+    } elseif (!preg_match('/^[a-zA-Z\s\-\.]+$/', $last_name)) {
+        $errors[] = 'Last name contains invalid characters.';
+    }
+
+    // Validate email
+    if (empty($email)) {
+        $errors[] = 'Email is required.';
+    } elseif (!is_email($email)) {
+        $errors[] = 'Please enter a valid email address.';
+    } elseif (rlg_is_disposable_email_contact($email)) {
+        $errors[] = 'Disposable email addresses are not allowed.';
+    }
+
+    // Validate phone (optional but if provided, check it)
+    if (!empty($phone)) {
+        if (!preg_match('/^[0-9\s\+\-\(\)]{10,20}$/', $phone)) {
+            $errors[] = 'Please enter a valid phone number (10-20 digits).';
+        }
+    }
+
+    // Validate message
+    if (empty($message)) {
+        $errors[] = 'Message is required.';
+    } elseif (strlen($message) < 10) {
+        $errors[] = 'Message must be at least 10 characters.';
+    } elseif (strlen($message) > 2000) {
+        $errors[] = 'Message is too long (max 2000 characters).';
+    } elseif (preg_match('/(viagra|cialis|casino|lottery|winner|click here|buy now)/i', $message)) {
+        $errors[] = 'Message contains prohibited content.';
+    }
+
+    // Check for spam patterns in name
+    if (preg_match('/(viagra|cialis|casino|lottery|seo service|buy now)/i', $full_name)) {
+        $errors[] = 'Name contains prohibited content.';
+    }
+
+    // Return validation errors
+    if (!empty($errors)) {
+        wp_send_json_error(array('message' => implode('<br>', $errors)));
+        return;
+    }
+
+    // Prepare email
+    $to = defined('RLG_CUSTOM_FORM_EMAIL') ? RLG_CUSTOM_FORM_EMAIL : get_option('admin_email');
+    $email_subject = 'Contact Form Submission - ' . get_bloginfo('name');
+    $email_message = "Name: $full_name\n";
+    $email_message .= "Email: $email\n";
+    $email_message .= "Phone: $phone\n\n";
+    $email_message .= "Message:\n$message\n";
+
+    $headers = array(
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>',
+        'Reply-To: ' . $full_name . ' <' . $email . '>'
+    );
+
+    // Save to database
+    $submission_data = array(
+        'contact_name' => $first_name,
+        'contact_lname' => $last_name,
+        'contact_email' => $email,
+        'contact_phone' => $phone,
+        'contact_message' => $message,
+    );
+
+    $submission_id = rlg_save_form_submission('contact_form', $submission_data);
+
+    // Send email
+    $sent = wp_mail($to, $email_subject, $email_message, $headers);
+
+    if ( $sent ) {
+        // Increment rate limit counter
+        $new_count = $submission_count ? $submission_count + 1 : 1;
+        set_transient($rate_limit_key, $new_count, 600); // 10 minutes
+
+        wp_send_json_success(array('message' => 'Thank you for your message! We will get back to you soon.'));
+    } else {
+        wp_send_json_error(array('message' => 'Failed to send message. Please try again later.'));
+    }
+}
+add_action('wp_ajax_rlg_contact_form_submit', 'rlg_contact_form_submit');
+add_action('wp_ajax_nopriv_rlg_contact_form_submit', 'rlg_contact_form_submit');
+
+/**
+ * Check if email is from a disposable email provider (for contact form)
+ */
+function rlg_is_disposable_email_contact($email) {
+    $disposable_domains = array(
+        'tempmail.com', 'guerrillamail.com', '10minutemail.com', 'mailinator.com',
+        'throwaway.email', 'temp-mail.org', 'fakeinbox.com', 'trashmail.com',
+        'yopmail.com', 'maildrop.cc', 'getnada.com', 'sharklasers.com',
+        'guerrillamailblock.com', 'spam4.me', 'grr.la', 'discard.email'
+    );
+
+    $email_domain = substr(strrchr($email, "@"), 1);
+    return in_array(strtolower($email_domain), $disposable_domains);
+}
 
 /**
  * Custom description tab content - shows long description with filtered content

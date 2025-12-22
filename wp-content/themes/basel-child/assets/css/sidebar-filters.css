@@ -24,6 +24,32 @@
     margin: 30px 0 10px;
 }
 
+/* Breadcrumbs - appears before H1 */
+.rlg-breadcrumbs {
+    margin-bottom: 12px;
+}
+
+.rlg-breadcrumbs .breadcrumb-inner {
+    font-size: 14px;
+    color: #667085;
+}
+
+.rlg-breadcrumbs a {
+    color: #667085;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.rlg-breadcrumbs a:hover {
+    color: #101828;
+}
+
+.rlg-breadcrumbs a::after {
+    content: ' › ';
+    margin: 0 8px;
+    color: #667085;
+}
+
 .rlg-category-heading h1 {
     font-size: 36px;
     font-weight: 600;

@@ -18,6 +18,21 @@ function rlg_add_customize_button() {
         return;
     }
 
+    // Categories to exclude from showing customize button
+    $excluded_categories = array('gloves', 'shoes', 'belts', 'bag', 'bags', 'accessories');
+
+    // Get product categories
+    $product_categories = wp_get_post_terms($product->get_id(), 'product_cat', array('fields' => 'slugs'));
+
+    // Check if product is in any excluded category
+    if (!empty($product_categories) && !is_wp_error($product_categories)) {
+        foreach ($product_categories as $category_slug) {
+            if (in_array($category_slug, $excluded_categories)) {
+                return; // Don't show button for excluded categories
+            }
+        }
+    }
+
     ?>
     <button type="button" class="rlg-customize-button" id="rlg-open-customize-form">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -38,6 +53,21 @@ function rlg_add_measurement_notice() {
 
     if (!$product) {
         return;
+    }
+
+    // Categories to exclude
+    $excluded_categories = array('gloves', 'shoes', 'belts', 'bag', 'bags', 'accessories');
+
+    // Get product categories
+    $product_categories = wp_get_post_terms($product->get_id(), 'product_cat', array('fields' => 'slugs'));
+
+    // Check if product is in any excluded category
+    if (!empty($product_categories) && !is_wp_error($product_categories)) {
+        foreach ($product_categories as $category_slug) {
+            if (in_array($category_slug, $excluded_categories)) {
+                return; // Don't show notice for excluded categories
+            }
+        }
     }
 
     ?>
@@ -61,6 +91,21 @@ function rlg_add_product_accordion() {
 
     if (!$product) {
         return;
+    }
+
+    // Categories to exclude
+    $excluded_categories = array('gloves', 'shoes', 'belts', 'bag', 'bags', 'accessories');
+
+    // Get product categories
+    $product_categories = wp_get_post_terms($product->get_id(), 'product_cat', array('fields' => 'slugs'));
+
+    // Check if product is in any excluded category
+    if (!empty($product_categories) && !is_wp_error($product_categories)) {
+        foreach ($product_categories as $category_slug) {
+            if (in_array($category_slug, $excluded_categories)) {
+                return; // Don't show accordion for excluded categories
+            }
+        }
     }
 
     // Get product short description for specifications

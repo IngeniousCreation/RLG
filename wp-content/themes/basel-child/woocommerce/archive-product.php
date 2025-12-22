@@ -79,6 +79,19 @@ if ( ! empty( $products ) ) :
 	if ( is_product_category() ) :
 	?>
 		<div class="rlg-category-heading">
+			<?php
+			// Display breadcrumbs before H1
+			if ( function_exists('woocommerce_breadcrumb') ) {
+				woocommerce_breadcrumb(array(
+					'delimiter'   => ' › ',
+					'wrap_before' => '<nav class="rlg-breadcrumbs" aria-label="Breadcrumb"><div class="breadcrumb-inner">',
+					'wrap_after'  => '</div></nav>',
+					'before'      => '',
+					'after'       => '',
+					'home'        => _x( 'Home', 'breadcrumb', 'woocommerce' ),
+				));
+			}
+			?>
 			<h1><?php echo esc_html( $current_category->name ); ?></h1>
 		</div>
 	<?php endif; ?>

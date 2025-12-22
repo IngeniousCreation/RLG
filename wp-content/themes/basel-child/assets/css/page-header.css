@@ -1,0 +1,67 @@
+/**
+ * Page Header Styles
+ * Custom breadcrumbs and page title for all pages
+ */
+
+/* Page Header Container */
+.rlg-page-header {
+    text-align: left;
+    margin: 30px 0 30px;
+    padding: 0;
+}
+
+/* Breadcrumbs - appears before H1 */
+.rlg-breadcrumbs-page {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #667085;
+}
+
+.rlg-breadcrumbs-page a {
+    color: #667085;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.rlg-breadcrumbs-page a:hover {
+    color: #101828;
+}
+
+/* Add separator after breadcrumb links */
+.rlg-breadcrumbs-page a::after {
+    content: ' › ';
+    margin: 0 8px;
+    color: #667085;
+}
+
+/* Page Title */
+.rlg-page-title {
+    font-size: 36px;
+    font-weight: 600;
+    color: #000;
+    margin: 0;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .rlg-page-header {
+        margin: 20px 0 20px;
+    }
+    
+    .rlg-page-title {
+        font-size: 28px;
+    }
+    
+    .rlg-breadcrumbs-page {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .rlg-page-title {
+        font-size: 24px;
+    }
+}
+

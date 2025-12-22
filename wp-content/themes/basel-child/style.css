@@ -70,7 +70,7 @@
     gap: 8px;
     border : 1px solid black !important;
     background-color: white !important;
-   
+   color:black !important;
     border: none;
     padding: 12px 24px;
     font-size: 14px;
@@ -530,5 +530,43 @@ details[open] .rlg-icon-minus {
     .rlg-select,
     .rlg-textarea {
         font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
+
+/* ============================================================================
+   Product Images - Object Fit Contain for Category Pages & Homepage
+   ========================================================================== */
+
+/* Override Basel product images to use contain instead of cover */
+.product-grid-item .product-image-link img,
+.product-list-item .product-image-link img,
+.basel-products-element .product-image-link img,
+.owl-carousel .product-image-link img,
+.products .product .product-image-link img {
+    object-fit: contain !important;
+}
+
+/* Mobile specific - ensure contain on all product images */
+@media (max-width: 768px) {
+    .product-grid-item .product-image-link img,
+    .product-list-item .product-image-link img,
+    .basel-products-element .product-image-link img,
+    .owl-carousel .product-image-link img,
+    .products .product .product-image-link img,
+    .product-element-top img,
+    .hover-img img,
+    .product-wrapper img {
+        object-fit: contain !important;
+    }
+}
+
+/* ============================================================================
+   Blog Page Title - Mobile Spacing
+   ========================================================================== */
+
+@media (max-width: 991px) {
+    .page-title.title-blog,
+    .single-post .page-title {
+        margin-top: 0.5em;
     }
 }
