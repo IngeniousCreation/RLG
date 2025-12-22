@@ -42,6 +42,29 @@
     margin-top: 3em;
 }
 
+/* Read More button for category description */
+.rlg-read-more-btn {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.rlg-read-more-btn:hover {
+    background: #333;
+    transform: translateY(-2px);
+}
+
+.rlg-read-more-btn.active {
+    background: #666;
+}
+
 @media (max-width: 991px) {
     .rlg-category-heading h1 {
         font-size: 28px;

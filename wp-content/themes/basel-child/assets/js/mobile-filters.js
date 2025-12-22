@@ -96,5 +96,27 @@
         RLGMobileFilters.init();
     });
 
+    // Read More functionality for category description
+    $(document).on('click', '.rlg-read-more-btn', function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $preview = $btn.siblings('.rlg-description-preview');
+        var $full = $btn.siblings('.rlg-description-full');
+
+        if ($full.is(':visible')) {
+            // Show preview, hide full
+            $preview.slideDown();
+            $full.slideUp();
+            $btn.text('Read More');
+            $btn.removeClass('active');
+        } else {
+            // Show full, hide preview
+            $preview.slideUp();
+            $full.slideDown();
+            $btn.text('Read Less');
+            $btn.addClass('active');
+        }
+    });
+
 })(jQuery);
 

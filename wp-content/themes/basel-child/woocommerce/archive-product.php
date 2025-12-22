@@ -84,12 +84,31 @@ if ( ! empty( $products ) ) :
 	<?php endif; ?>
 
 	<?php
-	// Display category description
+	// Display category description with Read More functionality
 	if ( is_product_category() && ! empty( $current_category->description ) ) :
+		$description = $current_category->description;
+		$description_length = strlen( strip_tags( $description ) );
+		$preview_length = 500; // Character limit for preview
+
+		if ( $description_length > $preview_length ) :
+			// Long description - add Read More
+			$preview_text = substr( strip_tags( $description ), 0, $preview_length );
+			$preview_text = substr( $preview_text, 0, strrpos( $preview_text, ' ' ) ); // Cut at last space
 	?>
 		<div class="rlg-category-description">
-			<?php echo wpautop( do_shortcode( $current_category->description ) ); ?>
+			<div class="rlg-description-preview">
+				<?php echo wpautop( do_shortcode( $preview_text . '...' ) ); ?>
+			</div>
+			<div class="rlg-description-full" style="display: none;">
+				<?php echo wpautop( do_shortcode( $description ) ); ?>
+			</div>
+			<button class="rlg-read-more-btn">Read More</button>
 		</div>
+	<?php else : ?>
+		<div class="rlg-category-description">
+			<?php echo wpautop( do_shortcode( $description ) ); ?>
+		</div>
+	<?php endif; ?>
 	<?php endif; ?>
 
 	<!-- Mobile Filter Button -->
