@@ -41,6 +41,9 @@ global $wpdb;
 $current_category = get_queried_object();
 $category_id = $current_category->term_id ?? 0;
 
+// Check if this is a search query
+$search_query = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+
 // Get filter parameters
 $min_price = isset($_GET['min_price']) ? floatval($_GET['min_price']) : 0;
 $max_price = isset($_GET['max_price']) ? floatval($_GET['max_price']) : 999999999;
@@ -58,6 +61,7 @@ require_once get_stylesheet_directory() . '/includes/custom-product-queries.php'
 // Get products using custom query
 $query_result = rlg_get_products_custom_query(array(
 	'category_id' => $category_id,
+	'search' => $search_query,
 	'min_price' => $min_price,
 	'max_price' => $max_price,
 	'stock_status' => $stock_status,
@@ -75,8 +79,17 @@ if ( ! empty( $products ) ) :
 ?>
 
 	<?php
-	// Display category heading
-	if ( is_product_category() ) :
+	// Display heading - Search or Category
+	if ( ! empty( $search_query ) ) :
+		// Search results heading
+	?>
+		<div class="rlg-category-heading">
+			<h1>Search Results for: "<?php echo esc_html( $search_query ); ?>"</h1>
+			<p class="woocommerce-result-count">Found <?php echo esc_html( $total_products ); ?> product<?php echo $total_products != 1 ? 's' : ''; ?></p>
+		</div>
+	<?php
+	elseif ( is_product_category() ) :
+		// Category heading
 	?>
 		<div class="rlg-category-heading">
 			<?php
@@ -246,6 +259,7 @@ if ( ! empty( $products ) ) :
 			data-page="<?php echo esc_attr($next_page); ?>"
 			data-max-pages="<?php echo esc_attr($max_num_pages); ?>"
 			data-category="<?php echo esc_attr($category_id); ?>"
+			data-search="<?php echo esc_attr($search_query); ?>"
 			data-min-price="<?php echo esc_attr($min_price); ?>"
 			data-max-price="<?php echo esc_attr($max_price); ?>"
 			data-stock-status="<?php echo esc_attr($stock_status); ?>"

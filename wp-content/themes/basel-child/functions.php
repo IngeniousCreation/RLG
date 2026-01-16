@@ -66,6 +66,17 @@ require_once get_stylesheet_directory() . '/includes/form-submissions-db.php';
 require_once get_stylesheet_directory() . '/includes/form-submissions-admin.php';
 
 /**
+ * Include improved header search with wpdb queries
+ */
+require_once get_stylesheet_directory() . '/includes/improved-header-search.php';
+
+/**
+ * Include custom desktop search bar
+ */
+require_once get_stylesheet_directory() . '/includes/custom-desktop-search.php';
+require_once get_stylesheet_directory() . '/includes/custom-search-template.php';
+
+/**
  * AJAX Load More Products Handler
  */
 function rlg_load_more_products() {
@@ -76,6 +87,7 @@ function rlg_load_more_products() {
 		// Get parameters
 		$paged = isset($_POST['page']) ? intval($_POST['page']) : 1;
 		$category_id = isset($_POST['category']) ? intval($_POST['category']) : 0;
+		$search_query = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
 		$min_price = isset($_POST['min_price']) ? floatval($_POST['min_price']) : 0;
 		$max_price = isset($_POST['max_price']) ? floatval($_POST['max_price']) : 999999999;
 		$stock_status = isset($_POST['stock_status']) ? sanitize_text_field($_POST['stock_status']) : '';
@@ -92,6 +104,7 @@ function rlg_load_more_products() {
 		// Get products
 		$query_result = rlg_get_products_custom_query(array(
 			'category_id' => $category_id,
+			'search' => $search_query,
 			'min_price' => $min_price,
 			'max_price' => $max_price,
 			'stock_status' => $stock_status,
@@ -544,8 +557,23 @@ function basel_child_enqueue_styles() {
     // Enqueue custom mega menu script
     wp_enqueue_script( 'rlg-mega-menu', get_stylesheet_directory_uri() . '/assets/js/mega-menu.js', array(), $version, true );
 
-    // Enqueue custom product grid styles on category pages
-    if ( is_tax( 'product_cat' ) ) {
+    // Enqueue improved search styles
+    wp_enqueue_style( 'rlg-improved-search', get_stylesheet_directory_uri() . '/assets/css/improved-search.css', array(), $version );
+
+    // Enqueue improved search script (load after jQuery and Basel's autocomplete)
+    wp_enqueue_script( 'rlg-improved-search', get_stylesheet_directory_uri() . '/assets/js/improved-search.js', array('jquery'), $version, true );
+
+    // Enqueue custom desktop search styles
+    wp_enqueue_style( 'rlg-custom-desktop-search', get_stylesheet_directory_uri() . '/assets/css/custom-desktop-search.css', array(), $version );
+
+    // Enqueue custom desktop search script
+    wp_enqueue_script( 'rlg-custom-desktop-search', get_stylesheet_directory_uri() . '/assets/js/custom-desktop-search.js', array('jquery'), $version, true );
+
+    // Enqueue scroll to top left positioning
+    wp_enqueue_style( 'rlg-scroll-to-top-left', get_stylesheet_directory_uri() . '/assets/css/scroll-to-top-left.css', array(), $version );
+
+    // Enqueue custom product grid styles on category pages and search results
+    if ( is_tax( 'product_cat' ) || ( is_search() && isset( $_GET['post_type'] ) && $_GET['post_type'] === 'product' ) || is_post_type_archive( 'product' ) ) {
         wp_enqueue_style( 'rlg-product-grid', get_stylesheet_directory_uri() . '/assets/css/custom-product-grid.css', array(), $version );
     }
 }
@@ -1003,6 +1031,15 @@ function basel_header_block_main_nav() {
 		?>
 	</div><!--END MAIN-NAV-->
 	<?php
+}
+
+/**
+ * Override Basel's search function with custom search bar
+ * This replaces the default basel_header_block_search() function
+ */
+function basel_header_block_search() {
+	// Call our custom search template
+	rlg_custom_header_block_search();
 }
 
 /**
@@ -2325,7 +2362,10 @@ if ( file_exists( $custom_sidebar_filters_path ) ) {
 
 // Enqueue sidebar filters CSS and JS
 function rlg_enqueue_sidebar_filters_assets() {
-    if ( is_product_category() || is_shop() ) {
+    // Load on category pages, shop page, and product search results
+    $is_product_page = is_product_category() || is_shop() || ( is_search() && isset( $_GET['post_type'] ) && $_GET['post_type'] === 'product' );
+
+    if ( $is_product_page ) {
         // Enqueue CSS with file modification time for cache busting
         wp_enqueue_style(
             'rlg-sidebar-filters',

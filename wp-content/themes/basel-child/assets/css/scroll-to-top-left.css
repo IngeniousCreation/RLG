@@ -1,0 +1,22 @@
+/**
+ * Scroll to Top Button - Move to Left Side
+ * Prevents collision with floating cart button
+ *
+ * @package Basel Child
+ * @since 1.0.0
+ */
+
+/* Move scroll to top button to left side */
+.scrollToTop {
+    right: auto !important;
+    left: 40px !important;
+}
+
+/* Mobile positioning */
+@media (max-width: 1024px) {
+    .scrollToTop {
+        left: 12px !important;
+        right: auto !important;
+    }
+}
+

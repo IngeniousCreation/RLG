@@ -24,6 +24,7 @@ function rlg_get_products_custom_query( $args = array() ) {
 	// Default arguments
 	$defaults = array(
 		'category_id' => 0,
+		'search' => '',
 		'min_price' => 0,
 		'max_price' => 999999999,
 		'stock_status' => '',
@@ -33,20 +34,32 @@ function rlg_get_products_custom_query( $args = array() ) {
 		'offset' => 0,
 		'paged' => 1
 	);
-	
+
 	$args = wp_parse_args( $args, $defaults );
-	
+
 	// Extract arguments
 	extract( $args );
-	
+
 	// Build WHERE clauses
 	$where_clauses = array();
 	$join_clauses = array();
-	
+
 	// Base WHERE clause - only published products
 	$where_clauses[] = "p.post_type = 'product'";
 	$where_clauses[] = "p.post_status = 'publish'";
-	
+
+	// Search filter
+	if ( ! empty( $search ) ) {
+		$search_like = '%' . $wpdb->esc_like( $search ) . '%';
+		$join_clauses[] = "LEFT JOIN {$wpdb->postmeta} AS pm_sku ON p.ID = pm_sku.post_id AND pm_sku.meta_key = '_sku'";
+		$where_clauses[] = $wpdb->prepare(
+			"(p.post_title LIKE %s OR p.post_content LIKE %s OR pm_sku.meta_value LIKE %s)",
+			$search_like,
+			$search_like,
+			$search_like
+		);
+	}
+
 	// Category filter
 	if ( $category_id > 0 ) {
 		$join_clauses[] = "INNER JOIN {$wpdb->term_relationships} AS tr ON p.ID = tr.object_id";

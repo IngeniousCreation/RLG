@@ -42,6 +42,7 @@
                 var page = parseInt($button.data('page'));
                 var maxPages = parseInt($button.data('max-pages'));
                 var category = $button.data('category');
+                var search = $button.data('search') || '';
                 var minPrice = $button.data('min-price');
                 var maxPrice = $button.data('max-price');
                 var stockStatus = $button.data('stock-status');
@@ -54,6 +55,7 @@
                 self.loadMoreProducts({
                     page: page,
                     category: category,
+                    search: search,
                     min_price: minPrice,
                     max_price: maxPrice,
                     stock_status: stockStatus,
@@ -79,6 +81,7 @@
                     nonce: rlgLoadMore.nonce,
                     page: data.page,
                     category: data.category,
+                    search: data.search,
                     min_price: data.min_price,
                     max_price: data.max_price,
                     stock_status: data.stock_status,

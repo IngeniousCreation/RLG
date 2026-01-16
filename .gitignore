@@ -6,6 +6,7 @@
 !README.md
 *.txt
 *.html
+!wp-content/themes/basel-child/sections_generated.html
 
 # Allow only wp-content directory
 !wp-content/

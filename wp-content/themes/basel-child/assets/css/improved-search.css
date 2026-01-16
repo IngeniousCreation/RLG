@@ -1,0 +1,156 @@
+/**
+ * ============================================================================
+ * IMPROVED HEADER SEARCH STYLES
+ * ============================================================================
+ */
+
+/* View All Link Styling */
+.autocomplete-suggestions .autocomplete-suggestion.view-all-suggestion {
+	background: #f5f5f5 !important;
+	border-top: 2px solid #e0e0e0 !important;
+	padding: 15px 20px !important;
+	text-align: center !important;
+	font-weight: 600 !important;
+	color: #000 !important;
+	cursor: pointer !important;
+	transition: all 0.3s ease !important;
+}
+
+.autocomplete-suggestions .autocomplete-suggestion.view-all-suggestion:hover {
+	background: #000 !important;
+	color: #fff !important;
+}
+
+.autocomplete-suggestions .autocomplete-suggestion.view-all-suggestion .suggestion-title {
+	font-size: 14px !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.5px !important;
+}
+
+/* Search Results Container */
+.basel-search-results .autocomplete-suggestions {
+	max-height: 400px;
+	overflow-y: auto;
+	border: 1px solid #e0e0e0;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual Search Result */
+.autocomplete-suggestions .autocomplete-suggestion {
+	padding: 12px 15px !important;
+	border-bottom: 1px solid #f0f0f0 !important;
+	transition: background 0.2s ease !important;
+}
+
+.autocomplete-suggestions .autocomplete-suggestion:hover {
+	background: #f9f9f9 !important;
+}
+
+/* Product Title in Results */
+.autocomplete-suggestions .suggestion-title {
+	font-size: 14px;
+	font-weight: 500;
+	color: #333;
+	margin-bottom: 5px;
+}
+
+/* Product Price in Results */
+.autocomplete-suggestions .suggestion-price {
+	font-size: 13px;
+	color: #666;
+	font-weight: 600;
+}
+
+/* Product SKU in Results */
+.autocomplete-suggestions .suggestion-sku {
+	font-size: 11px;
+	color: #999;
+	margin-top: 3px;
+}
+
+/* Product Image in Results */
+.autocomplete-suggestions .suggestion-thumbnail {
+	width: 50px;
+	height: 50px;
+	object-fit: cover;
+	border-radius: 4px;
+	margin-right: 12px;
+	float: left;
+}
+
+/* No Results Message */
+.autocomplete-suggestions .autocomplete-suggestion.no-found {
+	text-align: center;
+	color: #999;
+	font-style: italic;
+	padding: 20px !important;
+}
+
+/* Loading State */
+.basel-ajax-search.search-loading::after {
+	content: '';
+	position: absolute;
+	right: 15px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 20px;
+	height: 20px;
+	border: 2px solid #f3f3f3;
+	border-top: 2px solid #333;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% { transform: translateY(-50%) rotate(0deg); }
+	100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+	.basel-search-results .autocomplete-suggestions {
+		max-height: 300px;
+	}
+
+	.autocomplete-suggestions .autocomplete-suggestion {
+		padding: 10px !important;
+	}
+
+	.autocomplete-suggestions .suggestion-thumbnail {
+		width: 40px;
+		height: 40px;
+	}
+
+	.autocomplete-suggestions .suggestion-title {
+		font-size: 13px;
+	}
+
+	.autocomplete-suggestions .autocomplete-suggestion.view-all-suggestion {
+		padding: 12px 15px !important;
+	}
+}
+
+/* Highlight Search Term */
+.autocomplete-suggestions .autocomplete-suggestion strong {
+	color: #000;
+	font-weight: 700;
+}
+
+/* Scrollbar Styling */
+.basel-search-results .autocomplete-suggestions::-webkit-scrollbar {
+	width: 6px;
+}
+
+.basel-search-results .autocomplete-suggestions::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+.basel-search-results .autocomplete-suggestions::-webkit-scrollbar-thumb {
+	background: #888;
+	border-radius: 3px;
+}
+
+.basel-search-results .autocomplete-suggestions::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
+
