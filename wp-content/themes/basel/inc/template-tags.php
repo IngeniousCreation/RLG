@@ -1364,7 +1364,7 @@ if( ! function_exists( 'basel_header_block_cart' ) ) {
 
 		?>
 		<div class="shopping-cart basel-cart-design-<?php echo esc_attr( $design ); ?> <?php echo esc_attr( $extra_class ); ?>">
-			<a href="<?php echo esc_url(wc_get_cart_url()); ?>">
+			<a href="<?php echo esc_url(wc_get_cart_url()); ?>" onclick="handleCartClick(event); return false;">
 				<span><?php esc_html_e('Cart', 'basel'); ?> (<span>o</span>)</span>
 				<span class="basel-cart-totals">
 					<?php basel_cart_count(); ?>

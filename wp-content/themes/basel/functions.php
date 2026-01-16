@@ -83,7 +83,7 @@ if ( ! function_exists( 'basel_enqueue_styles' ) ) {
 			wp_enqueue_style( 'js_composer_front', BASEL_STYLES . '/wpb-optimized.min.css', array(), $version );
 		}
 
-		wp_enqueue_style( 'basel-style', $main_css_url, array( 'bootstrap' ), $version );
+		wp_enqueue_style( 'basel-style', $main_css_url, '4.0.1', $version );
 		wp_enqueue_style( 'js_composer_front', false, array(), $version );
 
 		if ( basel_get_opt( 'disable_gutenberg_css' ) ) {

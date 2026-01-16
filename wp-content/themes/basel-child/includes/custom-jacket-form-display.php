@@ -77,7 +77,7 @@ function rlg_add_measurement_notice() {
             <line x1="12" y1="16" x2="12" y2="12"></line>
             <line x1="12" y1="8" x2="12.01" y2="8"></line>
         </svg>
-        <p class="rlg-notice-text">All our products are made-to-order and cannot be returned due to size issues, so please ensure your measurements are accurate before placing an order.</p>
+        <p class="rlg-notice-text">All our products are made to order and are non-returnable due to sizing. Please carefully select your correct size using the size chart before placing your order.</p>
     </div>
     <?php
 }

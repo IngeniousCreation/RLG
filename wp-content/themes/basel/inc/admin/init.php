@@ -219,4 +219,3 @@ if ( ! function_exists( 'basel_enqueue_admin_styles' ) ) {
 
 	add_action( 'admin_enqueue_scripts', 'basel_enqueue_admin_styles' );
 }
-

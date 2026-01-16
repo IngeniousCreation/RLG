@@ -11,6 +11,13 @@
 
 /* Your customizations starts here */
 
+.cart-widget-side , .xoo-wsc-container {
+    z-index: 99999999999999999 !important;
+}
+
+.xoo-wsc-opac{
+    z-index: 9999999 !important;
+}
 /* Side Cart icon - Replace icon font with SVG */
 [class^="xoo-wsc-icon-"],
 [class*=" xoo-wsc-icon-"] {
@@ -109,7 +116,7 @@
     display: inline-flex;
     align-items: flex-start;
     gap: 12px;
-    background-color: #fff8e1;
+    
    
     border-radius: 4px;
     padding: 15px;
@@ -122,14 +129,14 @@
     width: 30px;
     height: 30px;
     flex-shrink: 0;
-    color: #856404;
+    
 }
 
 .rlg-notice-text {
     margin: 0;
     font-size: 13px;
     line-height: 1.6;
-    color: #856404;
+   
 }
 
 /* Mobile: Stack icon and text */

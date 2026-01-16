@@ -6677,7 +6677,7 @@ form.has-categories-dropdown input[type="text"] {
   width: 100%;
   border-bottom: 1px solid rgba(168, 168, 168, 0.15);
   position: relative;
-  margin-top: -40px;
+  margin-top: 10px !important;
   margin-bottom: 40px; }
   .page-title .entry-title,
   .page-title h1 {

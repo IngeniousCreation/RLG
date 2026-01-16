@@ -170,6 +170,12 @@ function basel_child_get_mega_menu_config() {
 			'url'      => '/custom-leather-jackets/',
 			'has_mega' => false,
 		),
+		array(
+			'id'       => 'contact',
+			'label'    => 'Contact Us',
+			'url'      => '/contact-us/',
+			'has_mega' => false,
+		),
 	);
 }
 

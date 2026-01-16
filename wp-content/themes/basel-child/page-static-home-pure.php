@@ -200,6 +200,7 @@ if (file_exists($sections_file)) {
     height: 500px;
     display: flex;
     flex-direction: column;
+    max-height: max-content;
 }
 
 .basel-products-custom .product-wrapper .product-element-top,
@@ -218,6 +219,7 @@ if (file_exists($sections_file)) {
     overflow: hidden;
     height: 350px;
     flex-shrink: 0;
+    max-height:max-content;
 }
 
 .basel-products-custom .product-image img {

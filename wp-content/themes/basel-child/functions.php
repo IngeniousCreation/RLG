@@ -1,4 +1,27 @@
 <?php
+
+function add_custom_cart_click_handler() {
+    ?>
+    <script type="text/javascript">
+    function handleCartClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Find and click the target element
+        const targetIcon = document.querySelector('.xoo-wsc-icon-basket1');
+        
+        if (targetIcon) {
+            targetIcon.click();
+        } else {
+            console.warn('Target element .xoo-wsc-icon-basket1 not found');
+        }
+    }
+    </script>
+    <?php
+}
+add_action('wp_head', 'add_custom_cart_click_handler');
+
+
 add_shortcode('elementor-template', '__return_empty_string');
 /**
  * Fix for deprecated dynamic property warnings in Basel Theme (PHP 8.2+)
@@ -505,15 +528,15 @@ add_action('wp_footer', 'rlg_custom_cookie_consent', 999);
 add_action( 'wp_enqueue_scripts', 'basel_child_enqueue_styles', 1000 );
 
 function basel_child_enqueue_styles() {
-	$version = basel_get_theme_info( 'Version' );
-
+	//$version = basel_get_theme_info( 'Version' );
+    $version = rand(0,1000);
 	if( basel_get_opt( 'minified_css' ) ) {
 		wp_enqueue_style( 'basel-style', get_template_directory_uri() . '/style.min.css', array('bootstrap'), $version );
 	} else {
-		wp_enqueue_style( 'basel-style', get_template_directory_uri() . '/style.css', array('bootstrap'), '1.0.0.1' );
+		wp_enqueue_style( 'basel-style', get_template_directory_uri() . '/style.css', array('bootstrap'), $version );
 	}
 
-    wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array('bootstrap'), '2.0.0.1');
+    wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array('bootstrap'), $version);
 
     // Enqueue custom mega menu styles
     wp_enqueue_style( 'rlg-mega-menu', get_stylesheet_directory_uri() . '/assets/css/mega-menu.css', array(), $version );
